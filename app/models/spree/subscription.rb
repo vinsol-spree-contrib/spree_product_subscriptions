@@ -14,7 +14,7 @@ module Spree
     with_options presence: true do
       validates :quantity, :end_date, :price
       validates :variant, :parent_order, :frequency
-      validates :ship_address, :bill_address, :last_recurrence_at, :source, if: :enabled?
+      validates :ship_address, :bill_address, :last_occurrence_at, :source, if: :enabled?
     end
     with_options allow_blank: true do
       validates :parent_order, uniqueness: { scope: :variant }
@@ -22,12 +22,12 @@ module Spree
       validates :quantity, numericality: { greater_than: 0, only_integer: true }
     end
 
-    before_validation :set_last_recurrence_at, if: :enabled?
+    before_validation :set_last_occurrence_at, if: :enabled?
 
     private
 
-      def set_last_recurrence_at
-        self.last_recurrence_at = Time.current
+      def set_last_occurrence_at
+        self.last_occurrence_at = Time.current
       end
 
   end

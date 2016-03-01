@@ -6,8 +6,8 @@
   <% end %>
 </div>
 <div id="subscribable_options" class=<%= @product.subscribable? ? '' : 'hidden' %>>
-  <%= f.collection_check_boxes :subscription_frequency_ids, Spree::SubscriptionFrequency.all, :id, :title, { include_hidden: false } do |b| %>
-    <%= b.label { b.check_box(class: "subscribable-option") + b.text } %>
+  <%= f.collection_check_boxes :subscription_frequency_ids, Spree::SubscriptionFrequency.all, :id, :title, { include_hidden: false } do |builder| %>
+    <%= builder.label { builder.check_box(class: "subscribable-option") + builder.text } %>
     <br>
   <% end %>
 </div>
