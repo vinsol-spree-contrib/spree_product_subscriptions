@@ -1,32 +1,33 @@
 module Spree
   class Subscription < Spree::Base
 
-    self.table_name = "spree_subscriptions"
+    belongs_to :ship_address, class_name: "Spree::Address"
+    belongs_to :bill_address, class_name: "Spree::Address"
+    belongs_to :parent_order, class_name: "Spree::Order"
+    belongs_to :variant, inverse_of: :subscriptions
+    belongs_to :frequency, foreign_key: :subscription_frequency_id, class_name: "Spree::SubscriptionFrequency"
+    belongs_to :source, class_name: "Spree::CreditCard"
 
-    # with_options required: true do
-      belongs_to :ship_address, class_name: "Spree::Address", inverse_of: :shipped_subscriptions
-      belongs_to :bill_address, class_name: "Spree::Address", inverse_of: :billed_subscriptions
-      belongs_to :parent_order, class_name: "Spree::Order", inverse_of: :parent_subscription
-      belongs_to :variant, inverse_of: :subscriptions, class_name: "Spree::Variant"
-      belongs_to :frequency, inverse_of: :subscriptions, foreign_key: :subscription_frequency_id, class_name: "Spree::SubscriptionFrequency"
-      belongs_to :source, class_name: "Spree::CreditCard"
-    # end
+    has_many :order_subscriptions, class_name: "Spree::OrderSubscription", dependent: :destroy
+    has_many :orders, through: :order_subscriptions, dependent: :destroy
 
     with_options presence: true do
       validates :quantity, :end_date, :price
       validates :variant, :parent_order, :frequency
       validates :ship_address, :bill_address, :last_recurrence_at, :source, if: :enabled?
     end
-    validates :parent_order, uniqueness: { scope: :variant }
-    validates :price, numericality: { greater_than: 0 }
-    validates :quantity, numericality: { greater_than: 0, only_integer: true }
+    with_options allow_blank: true do
+      validates :parent_order, uniqueness: { scope: :variant }
+      validates :price, numericality: { greater_than: 0 }
+      validates :quantity, numericality: { greater_than: 0, only_integer: true }
+    end
 
     before_validation :set_last_recurrence_at, if: :enabled?
 
     private
 
       def set_last_recurrence_at
-        self.last_recurrence_at = Time.now
+        self.last_recurrence_at = Time.current
       end
 
   end

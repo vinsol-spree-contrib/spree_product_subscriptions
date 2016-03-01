@@ -1,12 +1,8 @@
 module Spree
   class OrderSubscription < Spree::Base
 
-    self.table_name = "spree_order_subscriptions"
-
-    with_options required: true do
-      belongs_to :order
-      belongs_to :subscription
-    end
+    belongs_to :order, class_name: "Spree::Order"
+    belongs_to :subscription, class_name: "Spree::Subscription"
 
     validates :order, :subscription, presence: true
 
