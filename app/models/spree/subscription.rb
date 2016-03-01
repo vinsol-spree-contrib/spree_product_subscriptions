@@ -8,8 +8,8 @@ module Spree
     belongs_to :frequency, foreign_key: :subscription_frequency_id, class_name: "Spree::SubscriptionFrequency"
     belongs_to :source, class_name: "Spree::CreditCard"
 
-    has_many :order_subscriptions, class_name: "Spree::OrderSubscription", dependent: :destroy
-    has_many :orders, through: :order_subscriptions, dependent: :destroy
+    has_many :orders_subscriptions, class_name: "Spree::OrdersSubscription", dependent: :destroy
+    has_many :orders, through: :order_subscriptions
 
     with_options presence: true do
       validates :quantity, :end_date, :price

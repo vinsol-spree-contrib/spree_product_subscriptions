@@ -1,6 +1,6 @@
 Spree::Order.class_eval do
 
-  has_one :order_subscription, class_name: "Spree::OrderSubscription", dependent: :destroy
+  has_one :order_subscription, class_name: "Spree::OrdersSubscription", dependent: :destroy
   has_one :parent_subscription, through: :order_subscription, source: :subscription
   has_many :subscriptions, class_name: "Spree::Subscription",
                            foreign_key: :parent_order_id,
