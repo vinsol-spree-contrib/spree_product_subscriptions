@@ -5,7 +5,7 @@ Spree::Admin::ProductsController.class_eval do
   private
 
     def filter_subscribable_result
-      params[:q].delete(:subscribable_eq) if params[:q][:subscribable_eq] == "0"
+      params[:q].delete(:subscribable_eq) if params.fetch(:q, {})[:subscribable_eq] == "0"
     end
 
 end
