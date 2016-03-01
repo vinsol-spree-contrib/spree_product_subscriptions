@@ -1,0 +1,8 @@
+<td class='cart-item-subscription' data-hook='cart_item_subscription'>
+  <% subscription = @order.subscriptions.find_by(variant: variant) %>
+  <% if subscription %>
+    Subscribed <%= @order.subscriptions.find_by(variant: variant).frequency.title %>
+  <% else %>
+    Not Subscribed
+  <% end %>
+</td>
