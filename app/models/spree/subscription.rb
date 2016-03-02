@@ -11,6 +11,8 @@ module Spree
     has_many :orders_subscriptions, class_name: "Spree::OrdersSubscription", dependent: :destroy
     has_many :orders, through: :order_subscriptions
 
+    scope :disabled, -> { where(enabled: false) }
+
     with_options allow_blank: true do
       validates :price, numericality: { greater_than_or_equal_to: 0 }
       validates :quantity, numericality: { greater_than: 0, only_integer: true }
