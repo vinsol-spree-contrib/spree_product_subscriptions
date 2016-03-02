@@ -37,6 +37,7 @@ build/
 .project
 .sass-cache
 nbproject
+Gemfile.lock
 pkg
 *.swp
 spec/dummy
