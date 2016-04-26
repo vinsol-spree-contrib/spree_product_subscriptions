@@ -21,6 +21,12 @@ module SpreeItemsSubscriptions
       ]
     end
 
+    initializer "preferences", after: "spree.environment" do |app|
+      Spree::AppConfiguration.class_eval do
+        preference :promotion_for_only_first_order, :boolean, :false
+      end
+    end
+
     config.to_prepare &method(:activate).to_proc
   end
 end

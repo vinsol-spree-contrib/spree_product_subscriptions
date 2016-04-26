@@ -30,9 +30,13 @@ module Spree
             unless subscribed_products(order).none? {|p| eligible_products.include?(p) }
               eligibility_errors.add(:base, eligibility_error_message(:has_excluded_product))
             end
-          end
+          end 
 
-          eligibility_errors.empty?
+          eligibility_errors.empty? && applicable_with_preference?(order)
+        end
+
+        def applicable_with_preference?(order)
+          !Spree::Config.promotion_for_only_first_order || order.parent_subscription.nil?
         end
 
         def actionable?(line_item)
@@ -47,7 +51,15 @@ module Spree
         end
 
         def subscribed_products(order)
-          order.subscriptions.map(&:variant).map(&:product)
+          if parent_order_present?(order)
+            [order.parent_subscription.variant.product]
+          else
+            order.subscriptions.map(&:variant).map(&:product)
+          end
+        end
+
+        def parent_order_present?(order)
+          order.parent_subscription.present?
         end
 
         def subscribable_product_ids_string
