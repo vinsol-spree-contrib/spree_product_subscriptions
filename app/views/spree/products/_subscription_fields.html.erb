@@ -11,12 +11,13 @@
       <%= label_tag :subscription, Spree.t(:total_deliveries) %><span class="required">*</span>
       <br>
       <%= number_field :subscription, :delivery_number, class: "form-control", min: 1, value: 1 %>
+      <p class="text-danger">* subscribed infinitely if left blank</p>
     </span>
     <br>
     <span>
       <%= label_tag :subscription, Spree.t(:quantity) %><span class="required">*</span>
       <br>
-      <%= number_field_tag :quantity, 1, class: 'title form-control', min: 1 %>
+      <%= number_field_tag :quantity, 1,class: 'title form-control', min: 1 %>
     </span>
     <br>
     <span class='input-group-btn'>
