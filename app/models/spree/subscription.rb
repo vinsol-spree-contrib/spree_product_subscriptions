@@ -40,7 +40,7 @@ module Spree
     with_options allow_blank: true do
       validates :price, numericality: { greater_than_or_equal_to: 0 }
       validates :quantity, numericality: { greater_than: 0, only_integer: true }
-      validates :delivery_number, numericality: { greater_than_or_equal_to: :recurring_orders_size, only_integer: true, allow_blank: true }
+      validates :delivery_number, numericality: { greater_than_or_equal_to: :recurring_orders_size }
       validates :parent_order, uniqueness: { scope: :variant }
     end
     with_options presence: true do
@@ -63,9 +63,14 @@ module Spree
     before_validation :set_cancelled_at, if: :can_set_cancelled_at?
     before_update :not_cancelled?
     before_validation :update_price, on: :update, if: :variant_id_changed?
+    # after_validation :abc
     before_update :next_occurrence_at_not_changed?, if: :paused?
     after_update :notify_user, if: :user_notifiable?
     after_update :notify_cancellation, if: :cancellation_notifiable?
+
+    def abc
+      debugger
+    end
 
     def generate_number(options = {})
       options[:prefix] ||= 'S'
@@ -124,7 +129,7 @@ module Spree
     end
 
     def delivery_number
-      delivery_number || FLOAT::INFINITY
+      @delivery_number || Float::INFINITY
     end
 
     private
