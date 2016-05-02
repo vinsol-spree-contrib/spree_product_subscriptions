@@ -4,6 +4,7 @@ describe Spree::Subscription, type: :model do
 
   let(:last_ip_address) { "127.0.0.1" }
   let(:order) { create(:completed_order_with_totals, last_ip_address: last_ip_address) }
+  let(:frequency) { create(:monthly_subscription_frequency, title: "monthly1") }
   let(:orders) { [create(:completed_order_with_totals)] }
   let(:nil_attributes_subscription) { build(:nil_attributes_subscription) }
   let(:active_subscription) { create(:valid_subscription, enabled: true, parent_order: order, next_occurrence_at: just_passed_time) }
@@ -16,7 +17,6 @@ describe Spree::Subscription, type: :model do
 
   describe "validations" do
     it { is_expected.to validate_presence_of(:quantity) }
-    it { is_expected.to validate_presence_of(:delivery_number) }
     it { is_expected.to validate_presence_of(:price) }
     context "validates presence of number" do
       context "when number is absent" do
@@ -49,16 +49,15 @@ describe Spree::Subscription, type: :model do
         end
 
         context "when cancelled_at is absent" do
-          before do
-            nil_attributes_subscription.cancelled = true
-            nil_attributes_subscription.save
-          end
           it { expect(nil_attributes_subscription.cancelled_at).to_not be_present }
         end
       end
     end
     context "if enabled" do
-      before { subject.enabled = true }
+      before do
+        subject.frequency = frequency
+        subject.enabled = true
+      end
       it { expect(subject).to validate_presence_of(:ship_address) }
       it { expect(subject).to validate_presence_of(:bill_address) }
       context "validate_presence_of next_occurrence_at" do
@@ -73,7 +72,8 @@ describe Spree::Subscription, type: :model do
 
         context "when next_occurrence_at is absent" do
           before do
-            nil_attributes_subscription.enabled = true
+            nil_attributes_subscription.frequency = frequency 
+            nil_attributes_subscription.next_occurrence_at = nil
             nil_attributes_subscription.save
           end
           it { expect(nil_attributes_subscription.next_occurrence_at).to_not be_present }
@@ -364,8 +364,14 @@ describe Spree::Subscription, type: :model do
     end
 
     context "#number_of_deliveries_left" do
-      let(:completed_order) { create(:completed_order_with_totals) }
-      it { expect { active_subscription.complete_orders << completed_order }.to change { active_subscription.number_of_deliveries_left }.by -1 }
+      context "if delevery_number is nil" do
+        let(:completed_order) { create(:completed_order_with_totals) }
+        it { expect { active_subscription.complete_orders << completed_order }.to change { active_subscription.number_of_deliveries_left }.by -1 }
+      end
+      context "if delevery_number is not nil" do
+        before { active_subscription.delivery_number = nil }
+        it { expect(active_subscription.send :number_of_deliveries_left).to eq Float::INFINITY }
+      end
     end
 
     context "#cancellation_notifiable?" do
