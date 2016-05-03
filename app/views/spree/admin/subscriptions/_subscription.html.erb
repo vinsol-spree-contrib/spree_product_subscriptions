@@ -3,7 +3,7 @@
   <td><%= subscription.variant.name %></td>
   <td class="text-center"><%= subscription.price %></td>
   <td class="text-center"><%= subscription.frequency.title.titleize %></td>
-  <td class="text-center"><%= subscription.delivery_number || Float::INFINITY %></td>
+  <td class="text-center"><%= subscription.delivery_count %></td>
   <td class="text-center"><%= subscription.number_of_deliveries_left %></td>
   <td data-hook="admin_subscriptions_index_row_actions" class="actions actions-2 text-right">
     <% @subscription = subscription %>

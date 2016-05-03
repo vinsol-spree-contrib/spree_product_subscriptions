@@ -142,6 +142,10 @@ module Spree
         variant.present? && variant_was.try(:product_id) == variant.product_id
       end
 
+      def delivery_count
+        delivery_number || Float::INFINITY
+      end
+
       def set_cancelled_at
         self.cancelled_at = Time.current
       end

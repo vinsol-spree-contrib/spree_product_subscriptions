@@ -73,7 +73,6 @@ describe Spree::Subscription, type: :model do
         context "when next_occurrence_at is absent" do
           before do
             nil_attributes_subscription.frequency = frequency 
-            nil_attributes_subscription.next_occurrence_at = nil
             nil_attributes_subscription.save
           end
           it { expect(nil_attributes_subscription.next_occurrence_at).to_not be_present }
@@ -364,13 +363,23 @@ describe Spree::Subscription, type: :model do
     end
 
     context "#number_of_deliveries_left" do
-      context "if delevery_number is nil" do
+      context "if delivery_number is present" do
         let(:completed_order) { create(:completed_order_with_totals) }
         it { expect { active_subscription.complete_orders << completed_order }.to change { active_subscription.number_of_deliveries_left }.by -1 }
       end
-      context "if delevery_number is not nil" do
+      context "if delivery_number is not present" do
         before { active_subscription.delivery_number = nil }
         it { expect(active_subscription.send :number_of_deliveries_left).to eq Float::INFINITY }
+      end
+    end
+
+    context "#delivery_count" do
+      context "if delivery_number is present" do
+        it { expect(active_subscription.send :delivery_count).to eq active_subscription.delivery_number }
+      end
+      context "if delivery_number is not present" do
+        before { active_subscription.delivery_number = nil }
+        it { expect(active_subscription.send :delivery_count).to eq Float::INFINITY }
       end
     end
 

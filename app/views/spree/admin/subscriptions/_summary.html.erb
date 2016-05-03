@@ -37,7 +37,7 @@
         <td>
           <div data-hook="admin_subscription_delivery_number_form">
             <%= f.field_container :delivery_number, class: ["form-group"] do %>
-              <%= number_field :subscription, :delivery_number, class: "form-control", disabled: @subscription.not_changeable?, placeholder: 'Infinity' %>
+              <%= number_field :subscription, :delivery_number, class: "form-control", disabled: @subscription.not_changeable?, placeholder:  Spree.t(:infinity) %>
               <%= f.error_message_on :delivery_number %>
             <% end %>
           </div>
