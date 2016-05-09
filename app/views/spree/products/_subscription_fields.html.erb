@@ -11,6 +11,7 @@
       <%= label_tag :subscription, Spree.t(:total_deliveries) %><span class="required">*</span>
       <br>
       <%= number_field :subscription, :delivery_number, class: "form-control", min: 1, value: 1 %>
+      <p class="text-danger">*<%= Spree.t(:subscribed_infinitely_if_left_blank) %></p>
     </span>
     <br>
     <span>

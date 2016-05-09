@@ -5,6 +5,7 @@ en:
   hello: "Hello world"
 
   spree:
+    infinity: 'Infinity'
     subscription_notifier:
       notify_confirmation:
         subject: "%{frequency} %{number} Subscription Confirmation"
@@ -60,4 +61,4 @@ en:
             variant_id: 
               does_not_belong_to_product: 'does not belong to current product'
 
-    required_authentication: 'Please Login Before Proceeding.'
+  required_authentication: 'Please Login Before Proceeding.'

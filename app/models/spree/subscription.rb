@@ -3,6 +3,7 @@ module Spree
 
     attr_accessor :cancelled
 
+    include Spree::PresenterHelper
     include Spree::NumberGenerator
 
     ACTION_REPRESENTATIONS = {
@@ -44,7 +45,7 @@ module Spree
       validates :parent_order, uniqueness: { scope: :variant }
     end
     with_options presence: true do
-      validates :quantity, :delivery_number, :price, :number, :variant, :parent_order, :frequency
+      validates :quantity, :price, :number, :variant, :parent_order, :frequency
       validates :cancellation_reasons, :cancelled_at, if: :cancelled
       validates :ship_address, :bill_address, :next_occurrence_at, :source, if: :enabled?
     end
@@ -87,7 +88,7 @@ module Spree
     end
 
     def number_of_deliveries_left
-      delivery_number.to_i - complete_orders.size - 1
+      delivery_number ? (delivery_number.to_i - complete_orders.size - 1) : Float::INFINITY
     end
 
     def pause
