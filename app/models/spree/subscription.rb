@@ -3,6 +3,7 @@ module Spree
 
     attr_accessor :cancelled
 
+    include Spree::PresenterHelper
     include Spree::NumberGenerator
 
     ACTION_REPRESENTATIONS = {
@@ -140,10 +141,6 @@ module Spree
       def valid_variant?
         variant_was = Spree::Variant.find_by(id: variant_id_was)
         variant.present? && variant_was.try(:product_id) == variant.product_id
-      end
-
-      def delivery_count
-        delivery_number || Float::INFINITY
       end
 
       def set_cancelled_at

@@ -373,16 +373,6 @@ describe Spree::Subscription, type: :model do
       end
     end
 
-    context "#delivery_count" do
-      context "if delivery_number is present" do
-        it { expect(active_subscription.send :delivery_count).to eq active_subscription.delivery_number }
-      end
-      context "if delivery_number is not present" do
-        before { active_subscription.delivery_number = nil }
-        it { expect(active_subscription.send :delivery_count).to eq Float::INFINITY }
-      end
-    end
-
     context "#cancellation_notifiable?" do
       context "when cancelled at present and not changed" do
         it { expect(cancelled_subscription.send :cancellation_notifiable?).to eq false }
