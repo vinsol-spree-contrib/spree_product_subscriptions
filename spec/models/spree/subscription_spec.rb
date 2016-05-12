@@ -410,11 +410,6 @@ describe Spree::Subscription, type: :model do
       it { expect(active_subscription.cancellation_reasons).to eq "Test" }
     end
 
-    context "#generate_number" do
-      before { nil_attributes_subscription.generate_number }
-      it { expect(nil_attributes_subscription.number).to_not be_nil }
-    end
-
     context "#order_attributes" do
       it { expect(active_subscription.send :order_attributes).to eq ({
         currency: order.currency,

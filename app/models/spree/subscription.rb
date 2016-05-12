@@ -3,7 +3,7 @@ module Spree
 
     attr_accessor :cancelled
 
-    include Spree::NumberGenerator
+    include Spree::Core::NumberGenerator.new(prefix: 'S')
 
     ACTION_REPRESENTATIONS = {
                                pause: "Pause",
@@ -66,11 +66,6 @@ module Spree
     before_update :next_occurrence_at_not_changed?, if: :paused?
     after_update :notify_user, if: :user_notifiable?
     after_update :notify_cancellation, if: :cancellation_notifiable?
-
-    def generate_number(options = {})
-      options[:prefix] ||= 'S'
-      super(options)
-    end
 
     def process
       new_order = recreate_order if deliveries_remaining?
