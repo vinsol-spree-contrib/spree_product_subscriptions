@@ -1,0 +1,44 @@
+<div class="panel panel-default" id="payment" data-hook>
+  <div class="panel-heading">
+    <h3 class="panel-title"><%= Spree.t(:payment_information) %></h3>
+  </div>
+  <div class="panel-body" data-hook="checkout_payment_step">
+    <% if @credit_cards.present? %>
+      <div class="card_options">
+        <%= radio_button_tag 'use_existing_card', 'yes', true %>
+        <label for="use_existing_card_yes">
+          <%= Spree.t(:use_existing_cc) %>
+        </label>
+        <br/>
+        <%= radio_button_tag 'use_existing_card', 'no' %>
+        <label for="use_existing_card_no">
+          <%= Spree.t(:use_new_credit_card) %>
+        </label>
+      </div>
+
+      <div id="existing_cards">
+        <p class="form-group" data-hook="existing_cards">
+          <table class="existing-credit-card-list">
+            <tbody>
+              <% @credit_cards.each do |card| %>
+                <tr id="<%= dom_id(card,'spree')%>" class="<%= cycle('even', 'odd') %>">
+                  <td><%= card.name %></td>
+                  <td><%= card.display_number %></td>
+                  <td><%= card.month %> / <%= card.year %></td>
+                  <td>
+                    <%= radio_button_tag "order[existing_card]", card.id, (card == @credit_cards.first), { class: "existing-cc-radio" }  %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </p>
+      </div>
+    <% end %>
+
+    <% unless @subscription.not_changeable? %>
+      <%= render :partial => "spree/checkout/payment/gateway", :locals => { :payment_method => @subscription.source.payment_method } %>
+    <% end %>
+    
+  </div>
+</div>

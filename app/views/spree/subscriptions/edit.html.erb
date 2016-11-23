@@ -21,6 +21,7 @@
     <%= render partial: 'summary', locals: { f: f } %>
     <%= render partial: 'item', locals: { f: f } %>
     <%= render partial: 'payment_info', locals: { f: f } %>
+    <%= render partial: 'payments', locals: { f: f } %>
     <%= render partial: 'addresses', locals: { f: f } %>
     <%= render partial: 'orders' %>
     <% unless @subscription.not_changeable? %>
