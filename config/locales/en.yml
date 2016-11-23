@@ -61,3 +61,8 @@ en:
               does_not_belong_to_product: 'does not belong to current product'
 
     required_authentication: 'Please Login Before Proceeding.'
+
+    promotion_rule_types:
+      subscribable_product:
+        description: Order includes specified product(s)
+        name: Subscribable Product(s)
