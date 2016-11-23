@@ -10,6 +10,8 @@ describe Spree::Subscription, type: :model do
   let(:disabled_subscription) { create(:valid_subscription, enabled: false) }
   let(:completed_subscription) { create(:valid_subscription, enabled: true, delivery_number: 1, next_occurrence_at: just_passed_time) }
   let(:paused_subscription) { create(:valid_subscription, paused: true, enabled: true, next_occurrence_at: just_passed_time) }
+  let(:prior_notification_enabled) { create(:valid_subscription, enabled: true, parent_order: order, next_occurrence_at: just_passed_time, prior_notification_enabled: true) }
+  let(:prior_notification_disabled) { create(:valid_subscription, enabled: true, parent_order: order, next_occurrence_at: just_passed_time, prior_notification_enabled: false) }
   let(:cancelled_subscription) { create(:valid_subscription, cancelled_at: Time.current, cancellation_reasons: "Test") }
   let(:subscription_with_recreated_orders) { create(:valid_subscription, orders: orders, next_occurrence_at: just_passed_time) }
   let(:just_passed_time) { Time.current - 1.minute }
@@ -156,6 +158,11 @@ describe Spree::Subscription, type: :model do
     context ".unpaused" do
       it { expect(Spree::Subscription.unpaused).to_not include paused_subscription }
       it { expect(Spree::Subscription.unpaused).to include active_subscription }
+    end
+
+    context ".prior_notification_enabled" do
+      it { expect(Spree::Subscription.prior_notification_enabled).to_not include prior_notification_disabled }
+      it { expect(Spree::Subscription.prior_notification_enabled).to include prior_notification_enabled }
     end
 
     context ".with_appropriate_delivery_time" do
@@ -520,10 +527,25 @@ describe Spree::Subscription, type: :model do
           it { expect { active_subscription.send :send_prior_notification }.to change { ActionMailer::Base.deliveries.count }.by 1 }
         end
         context "is not eligible_for_prior_notification" do
-          before do
-            active_subscription.prior_notification_days_gap = 1.day
+          context "When user disabled the prior_notification_feature" do
+            before do
+              active_subscription.prior_notification_enabled = false
+            end
+            it { expect { active_subscription.send :send_prior_notification }.to change { ActionMailer::Base.deliveries.count }.by 0 }
           end
-          it { expect { active_subscription.send :send_prior_notification }.to change { ActionMailer::Base.deliveries.count }.by 0 }
+          context "When time to next order is not as per user selected" do
+            before do
+              active_subscription.prior_notification_days_gap = 1.day
+            end
+            it { expect { active_subscription.send :send_prior_notification }.to change { ActionMailer::Base.deliveries.count }.by 0 }
+          end
+          context "When user disabled the prior_notification_feature and time to next order is not as per user selected" do
+            before do
+              active_subscription.prior_notification_enabled = false
+              active_subscription.prior_notification_days_gap = 1.day
+            end
+            it { expect { active_subscription.send :send_prior_notification }.to change { ActionMailer::Base.deliveries.count }.by 0 }
+          end
         end
       end
     end

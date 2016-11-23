@@ -19,6 +19,11 @@
       <%= number_field_tag :quantity, 1, class: 'title form-control', min: 1 %>
     </span>
     <br>
+    <span>
+      <%= check_box_tag :prior_notification_enabled, 1, class: 'form-control'%>
+      <%= label_tag :subscription, Spree.t(:enable_prior_notification) %>
+    </span>
+    <br>
     <span class='input-group-btn'>
       <%= button_tag class: 'btn btn-success', id: 'subscribe-button', type: :submit, name: :subscribe, value: '1' do %>
         <%= Spree.t(:subscribe_now) %>

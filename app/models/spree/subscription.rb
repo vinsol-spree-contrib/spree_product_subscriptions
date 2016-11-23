@@ -36,6 +36,7 @@ module Spree
     scope :with_appropriate_delivery_time, -> { where("next_occurrence_at <= :current_date", current_date: Time.current) }
     scope :eligible_for_subscription, -> { unpaused.active.not_cancelled.with_appropriate_delivery_time }
     scope :with_parent_orders, -> (orders) { where(parent_order: orders) }
+    scope :prior_notification_enabled, -> { where(prior_notification_enabled: true) }
 
     with_options allow_blank: true do
       validates :price, numericality: { greater_than_or_equal_to: 0 }
@@ -43,11 +44,13 @@ module Spree
       validates :delivery_number, numericality: { greater_than_or_equal_to: :recurring_orders_size, only_integer: true }
       validates :parent_order, uniqueness: { scope: :variant }
     end
+
     with_options presence: true do
       validates :quantity, :delivery_number, :price, :number, :variant, :parent_order, :frequency
       validates :cancellation_reasons, :cancelled_at, if: :cancelled
       validates :ship_address, :bill_address, :next_occurrence_at, :source, if: :enabled?
     end
+    
     validate :next_occurrence_at_range, if: :next_occurrence_at
 
     define_model_callbacks :pause, only: [:before]
@@ -121,7 +124,7 @@ module Spree
     private
 
       def eligible_for_prior_notification?
-        (next_occurrence_at.to_date - Time.current.to_date).round == prior_notification_days_gap
+        prior_notification_enabled? && (next_occurrence_at.to_date - Time.current.to_date).round == prior_notification_days_gap 
       end
       
       def update_price
