@@ -1,7 +1,14 @@
 FactoryGirl.define do
   factory :monthly_subscription_frequency, class: Spree::SubscriptionFrequency do
     title "monthly"
-    months_count 1
+    units_count 1
+    unit :months
+  end
+
+  factory :weekly_subscription_frequency, class: Spree::SubscriptionFrequency do
+    title "weekly"
+    units_count 1
+    unit :weeks
   end
 
   factory :nil_attributes_subscription, class: Spree::Subscription do
