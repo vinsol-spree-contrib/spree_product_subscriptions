@@ -10,14 +10,14 @@
   <table class="table">
     <thead>
       <th><%= Spree::SubscriptionFrequency.human_attribute_name :title %></th>
-      <th><%= Spree::SubscriptionFrequency.human_attribute_name :months_count %></th>
+      <th><%= Spree::SubscriptionFrequency.human_attribute_name :frequency %></th>
       <th></th>
     </thead>
     <tbody>
       <% @subscription_frequencies.each do |subscription_frequency| %>
         <tr>
           <td><%= subscription_frequency.title.titleize %></td>
-          <td><%= subscription_frequency.months_count %> months</td>
+          <td><%= subscription_frequency.units_count %> <%= subscription_frequency.unit %></td>
           <td class="actions actions-2 text-right">
             <%= link_to_edit subscription_frequency, no_text: true %>
             <%= link_to_delete subscription_frequency, no_text: true %>

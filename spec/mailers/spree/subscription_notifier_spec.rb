@@ -4,7 +4,7 @@ RSpec.describe Spree::SubscriptionNotifier do
 
   let(:active_subscription) { mock_model(Spree::Subscription, id: 1, enabled: true, next_occurrence_at: Time.current) }
   let(:order) { create(:completed_order_with_totals) }
-  let(:subscription_frequency) { mock_model(Spree::SubscriptionFrequency, id: 1, title: 'monthly', months_count: 1) }
+  let(:subscription_frequency) { mock_model(Spree::SubscriptionFrequency, id: 1, title: 'monthly', units_count: 1, unit: :months) }
   let(:variant) { mock_model(Spree::Variant) }
   let(:product) { mock_model(Spree::Product) }
 
