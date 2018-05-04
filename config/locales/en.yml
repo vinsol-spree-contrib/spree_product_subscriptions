@@ -53,6 +53,8 @@ en:
           confirm: "Once cancelled, subscription can not be enabled again"
         error_on_already_cancelled: "Cancelled Subscription can not be processed."
 
+    required_authentication: 'Please Login Before Proceeding.'
+
   activerecord:
     errors:
       models:
@@ -61,4 +63,3 @@ en:
             variant_id:
               does_not_belong_to_product: 'does not belong to current product'
 
-    required_authentication: 'Please Login Before Proceeding.'

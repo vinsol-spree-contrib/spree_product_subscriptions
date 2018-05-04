@@ -1,5 +1,5 @@
 module Spree
-  class SubscriptionsController < Spree::BaseController
+  class SubscriptionsController < Spree::StoreController
     include Spree::Core::ControllerHelpers::Order
 
     before_action :ensure_subscription
