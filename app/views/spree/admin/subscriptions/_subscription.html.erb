@@ -1,7 +1,7 @@
 <tr id="<%= spree_dom_id subscription %>" data-hook="admin_subscriptions_index_rows" data-id="<%= subscription.id %>">
   <td><%= link_to subscription.number, edit_admin_subscription_path(subscription) %></td>
   <td><%= subscription.variant.name %></td>
-  <td class="text-center"><%= subscription.price %></td>
+  <td class="text-center"><%= subscription.price * subscription.quantity %></td>
   <td class="text-center">
     <% if subscription.frequency %>
       <%= subscription.frequency.title.titleize %>
@@ -9,6 +9,7 @@
       <%= subscription.label_status.title.titleize %>
     <% end %>
   </td>
+
   <td data-hook="admin_subscriptions_index_row_actions" class="actions actions-2 text-right">
     <% @subscription = subscription %>
     <% if subscription.cancelled? %>

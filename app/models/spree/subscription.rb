@@ -63,6 +63,7 @@ module Spree
     before_validation :update_price, on: :update, if: :variant_id_changed?
     after_update :notify_user, if: :user_notifiable?
     after_update :notify_cancellation, if: :cancellation_notifiable?
+    after_update :update_next_occurrence_at
 
     def cancel_with_reason(attributes)
       self.cancelled = true
@@ -220,5 +221,21 @@ module Spree
         enabled? && enabled_changed?
       end
 
+<<<<<<< HEAD
+=======
+      def next_occurrence_at_not_changed?
+        !next_occurrence_at_changed?
+      end
+
+      def next_occurrence_at_range
+        unless next_occurrence_at >= Time.current.to_date
+          errors.add(:next_occurrence_at, Spree.t('subscriptions.error.out_of_range'))
+        end
+      end
+
+      def update_next_occurrence_at
+        update_column(:next_occurrence_at, next_occurrence_at_value)
+      end
+>>>>>>> 0fec262... qa fix
   end
 end
