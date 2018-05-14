@@ -37,6 +37,7 @@ en:
         pause: "Are you sure you want to pause this subscription"
         activate: "Are you sure you want to activate this subscription"
         cancel: "Are you sure to cancel this subscription. One cancelled it cannot be started again."
+      unauthorized: 'You are not authorized to performn thisa action.'
 
     admin:
       subscriptions:
