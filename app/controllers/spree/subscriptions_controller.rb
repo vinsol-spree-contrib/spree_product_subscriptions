@@ -106,12 +106,7 @@ module Spree
       end
 
       def ensure_subscription_belongs_to_user
-        if @subscription.parent_order.user != spree_current_user
-          respond_to do |format|
-            format.html { redirect_to account_path, error: Spree.t('subscriptions.unauthorized') }
-            format.json { render json: { flash: Spree.t("subscriptions.unauthorized") }, status: 422 }
-          end
-        end
+        authorize! :update, @subscription
       end
 
   end
