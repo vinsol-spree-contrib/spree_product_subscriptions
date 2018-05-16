@@ -154,7 +154,20 @@ module Spree
         order.next
       end
 
+      # select shipping method which was selected in original order.
       def add_delivery_method_to_order(order)
+        selected_shipping_method_id = parent_order.inventory_units.where(variant_id: variant.id).first.shipment.shipping_method.id
+
+        order.shipments.each do |shipment|
+          current_shipping_method = shipment.shipping_rates.find_by(selected: true)
+          proposed_shipping_method = shipment.shipping_rates.find_by(shipping_method_id: selected_shipping_method_id)
+
+          if proposed_shipping_method.present? && current_shipping_method != proposed_shipping_method
+            current_shipping_method.update(selected: false)
+            proposed_shipping_method.update(selected: true)
+          end
+        end
+
         order.next
       end
 
