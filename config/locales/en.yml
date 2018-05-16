@@ -33,6 +33,7 @@ en:
       error:
         out_of_range: "Next Occurrence cannot be before today's date"
         not_changeable: "Subscription is either cancelled or all the deliveries are done."
+        should_be_earlier_than_next_delivery: 'should be earlier than next delivery'
       confirm:
         pause: "Are you sure you want to pause this subscription"
         activate: "Are you sure you want to activate this subscription"

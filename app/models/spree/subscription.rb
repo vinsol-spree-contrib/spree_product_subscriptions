@@ -238,22 +238,5 @@ module Spree
       def user_notifiable?
         enabled? && enabled_changed?
       end
-
-<<<<<<< HEAD
-=======
-      def next_occurrence_at_not_changed?
-        !next_occurrence_at_changed?
-      end
-
-      def next_occurrence_at_range
-        unless next_occurrence_at >= Time.current.to_date
-          errors.add(:next_occurrence_at, Spree.t('subscriptions.error.out_of_range'))
-        end
-      end
-
-      def update_next_occurrence_at
-        update_column(:next_occurrence_at, next_occurrence_at_value)
-      end
->>>>>>> 0fec262... qa fix
   end
 end
