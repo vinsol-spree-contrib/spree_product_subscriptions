@@ -159,12 +159,12 @@ module Spree
         selected_shipping_method_id = parent_order.inventory_units.where(variant_id: variant.id).first.shipment.shipping_method.id
 
         order.shipments.each do |shipment|
-          current_shipping_method = shipment.shipping_rates.find_by(selected: true)
-          proposed_shipping_method = shipment.shipping_rates.find_by(shipping_method_id: selected_shipping_method_id)
+          current_shipping_rate = shipment.shipping_rates.find_by(selected: true)
+          proposed_shipping_rate = shipment.shipping_rates.find_by(shipping_method_id: selected_shipping_method_id)
 
-          if proposed_shipping_method.present? && current_shipping_method != proposed_shipping_method
-            current_shipping_method.update(selected: false)
-            proposed_shipping_method.update(selected: true)
+          if proposed_shipping_rate.present? && current_shipping_rate != proposed_shipping_rate
+            current_shipping_rate.update(selected: false)
+            proposed_shipping_rate.update(selected: true)
           end
         end
 
