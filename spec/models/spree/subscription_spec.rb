@@ -8,13 +8,16 @@ describe Spree::Subscription, type: :model do
   let(:nil_attributes_subscription) { build(:nil_attributes_subscription) }
   let(:active_subscription) { create(:valid_subscription, enabled: true, parent_order: order, next_occurrence_at: just_passed_time) }
   let(:disabled_subscription) { create(:valid_subscription, enabled: false) }
-  let(:completed_subscription) { create(:valid_subscription, enabled: true, delivery_number: 1, next_occurrence_at: just_passed_time) }
+  let(:completed_subscription) { create(:valid_subscription, enabled: true, delivery_number: 1, next_occurrence_at: Time.current + 10.days) }
   let(:paused_subscription) { create(:valid_subscription, paused: true, enabled: true, next_occurrence_at: just_passed_time) }
   let(:cancelled_subscription) { create(:valid_subscription, cancelled_at: Time.current, cancellation_reasons: "Test") }
   let(:subscription_with_recreated_orders) { create(:valid_subscription, orders: orders, next_occurrence_at: just_passed_time) }
   let(:just_passed_time) { Time.current - 1.minute }
+  let(:frequency) { create(:monthly_subscription_frequency) }
 
   describe "validations" do
+    before { subject.frequency = frequency }
+
     it { is_expected.to validate_presence_of(:quantity) }
     it { is_expected.to validate_presence_of(:delivery_number) }
     it { is_expected.to validate_presence_of(:price) }
@@ -35,6 +38,8 @@ describe Spree::Subscription, type: :model do
     it { is_expected.to validate_presence_of(:variant) }
     it { is_expected.to validate_presence_of(:parent_order) }
     it { is_expected.to validate_presence_of(:frequency) }
+    it { is_expected.to validate_presence_of(:prior_notification_days_gap) }
+
     context "if cancelled present" do
       before { subject.cancelled = true }
       it { expect(subject).to validate_presence_of(:cancellation_reasons) }
@@ -322,6 +327,21 @@ describe Spree::Subscription, type: :model do
       it { expect(nil_attributes_subscription.errors[:next_occurrence_at]).to include Spree.t('subscriptions.error.out_of_range') }
     end
 
+    describe '#next_occurrence_at_range' do
+      before do
+        completed_subscription.next_occurrence_at = Time.current
+        completed_subscription.save
+      end
+
+      it 'is expected not the save the subscription' do
+        expect(completed_subscription.valid?).to eq(false)
+      end
+
+      it 'is expected to add error message to subscription' do
+        expect(completed_subscription.errors.messages[:prior_notification_days_gap]).to eq([Spree.t('subscriptions.error.should_be_earlier_than_next_delivery')])
+      end
+    end
+
     context "#not_cancelled?" do
       it { expect(active_subscription.send :not_cancelled?).to eq true }
       it { expect(disabled_subscription.send :not_cancelled?).to eq true }
@@ -446,6 +466,10 @@ describe Spree::Subscription, type: :model do
       let(:created_order_with_payment_method) { active_subscription.send(:add_payment_method_to_order, created_order_with_delivery_method); created_order_with_delivery_method }
       let(:created_order_with_confirmation) { active_subscription.send(:confirm_order, created_order_with_payment_method); created_order_with_payment_method }
 
+      before do
+        active_subscription.parent_order.inventory_units.update_all(variant_id: active_subscription.variant.id)
+      end
+
       context "#make_new_order" do
         it { expect(created_order.currency).to eq new_order.currency }
         it { expect(created_order.guest_token).to eq new_order.guest_token }
@@ -468,7 +492,26 @@ describe Spree::Subscription, type: :model do
       end
 
       context "#add_delivery_method_to_order" do
+        let(:parent_order_shipping_method_id) { active_subscription.parent_order.inventory_units.where(variant_id: active_subscription.variant.id).first.shipment.shipping_method.id }
+        let(:subscription_order_shipping_method_id) { created_order_with_delivery_method.shipments.first.shipping_rates.find_by(selected: true).shipping_method_id }
+
+        before do
+          active_subscription.send :add_delivery_method_to_order, created_order_with_delivery_method
+        end
+
+        it 'is expected to select shipping method same to parent order' do
+          expect(parent_order_shipping_method_id).to eq(subscription_order_shipping_method_id)
+        end
+
         it { expect(created_order_with_delivery_method.state).to eq "payment" }
+      end
+
+      describe '#add_shipping_costs_to_order' do
+        it 'is expected to call set_shipments_cost' do
+          expect(created_order_with_delivery_method).to receive(:set_shipments_cost)
+        end
+
+        after { active_subscription.send :add_shipping_costs_to_order, created_order_with_delivery_method }
       end
 
       context "#add_payment_method_to_order" do
@@ -488,9 +531,87 @@ describe Spree::Subscription, type: :model do
         it { expect(recreated_order.payments.first.source).to eq active_subscription.source }
         it { expect(recreated_order).to be_completed }
       end
+
+      describe '#update_next_occurrence_at' do
+        before { active_subscription.send :update_next_occurrence_at }
+
+        it { is_expected.to callback(:update_next_occurrence_at).after(:update) }
+
+        it 'is expected to update next_occurrence_at column' do
+          expect(active_subscription.next_occurrence_at.to_i).to eq(active_subscription.send(:next_occurrence_at_value).to_i)
+        end
+      end
     end
 
     context "#process" do
+      before { active_subscription.parent_order.inventory_units.update_all(variant_id: active_subscription.variant.id) }
+
+      context 'when product is discontinued' do
+        before do
+          active_subscription.variant.product.update_column(:discontinue_on, Time.current - 1.day)
+        end
+
+        it 'is expected to update next_occurrence_possible to false' do
+          active_subscription.process
+          expect(active_subscription.next_occurrence_possible).to eq(false)
+        end
+
+        it 'is expected not to create an order' do
+          expect { active_subscription.process }.not_to change { active_subscription.complete_orders.count }
+        end
+      end
+
+      context 'when variant does not have enough stock' do
+        before do
+          active_subscription.variant.stock_items.update_all(count_on_hand: 0)
+        end
+
+        context 'when variant is backorderable' do
+          before do
+            active_subscription.variant.stock_items.first.update_column(:backorderable, true)
+          end
+
+          it 'is expected to update next_occurrence_possible to true' do
+            active_subscription.process
+            expect(active_subscription.next_occurrence_possible).to eq(true)
+          end
+
+          it 'is expected not to create an order' do
+            expect { active_subscription.process }.to change { active_subscription.complete_orders.count }.by 1
+          end
+        end
+
+        context 'when variant is not backorderable' do
+          before do
+            active_subscription.variant.stock_items.update_all(backorderable: false)
+          end
+
+          it 'is expected to update next_occurrence_possible to false' do
+            active_subscription.process
+            expect(active_subscription.next_occurrence_possible).to eq(false)
+          end
+
+          it 'is expected not to create an order' do
+            expect { active_subscription.process }.not_to change { active_subscription.complete_orders.count }
+          end
+        end
+      end
+
+      context 'when variant has enough stock' do
+        before do
+          active_subscription.variant.stock_items.first.update_column(:count_on_hand, active_subscription.quantity)
+        end
+
+        it 'is expected to update next_occurrence_possible to true' do
+          active_subscription.process
+          expect(active_subscription.next_occurrence_possible).to eq(true)
+        end
+
+        it 'is expected not to create an order' do
+          expect { active_subscription.process }.to change { active_subscription.complete_orders.count }.by 1
+        end
+      end
+
       context "when no deliveries remaining" do
         before do
           active_subscription.delivery_number = 1
