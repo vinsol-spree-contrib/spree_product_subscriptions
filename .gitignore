@@ -42,6 +42,7 @@ Gemfile.lock
 pkg
 *.swp
 spec/dummy
+gemfiles/*.gemfile.lock
 
 # TC specific ignores
 *.sublime-workspace
