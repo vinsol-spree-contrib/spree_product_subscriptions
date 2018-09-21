@@ -3,12 +3,12 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.name        = 'spree_product_subscriptions'
   s.version     = '3.2.0'
-  s.summary     = 'Add gem summary here'
-  s.description = 'Add (optional) gem description here'
+  s.summary     = 'spree_product_subscriptions gem customization'
+  s.description = 'Dedicated for project github.com/underwearexpert/tux-processor'
   s.required_ruby_version = '>= 2.1.0'
 
-  s.author    = 'Vinay'
-  s.email     = 'vinay@vinsol.com'
+  s.author    = '@Nopio'
+  s.email     = ''
   # s.homepage  = 'http://www.spreecommerce.com'
 
   #s.files       = `git ls-files`.split("\n")
@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
   s.requirements << 'none'
 
-  s.add_dependency 'spree_core', '~> 3.2.0.rc2'
+  s.add_dependency 'spree_core', '~> 3.3.0'
 
   s.add_development_dependency 'capybara', '~> 2.4'
   s.add_development_dependency 'coffee-rails', '~> 4.2'
