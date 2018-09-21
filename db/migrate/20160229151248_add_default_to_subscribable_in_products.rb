@@ -1,4 +1,4 @@
-class AddDefaultToSubscribableInProducts < ActiveRecord::Migration
+class AddDefaultToSubscribableInProducts < ActiveRecord::Migration[5.1]
   def up
     change_column_default :spree_products, :subscribable, false
   end
