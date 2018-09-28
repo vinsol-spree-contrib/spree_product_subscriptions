@@ -42,10 +42,9 @@ module Spree
       validates :price, numericality: { greater_than_or_equal_to: 0 }
       validates :quantity, numericality: { greater_than: 0, only_integer: true }
       validates :delivery_number, numericality: { greater_than_or_equal_to: :recurring_orders_size, only_integer: true }
-      validates :parent_order, uniqueness: { scope: :variant }
     end
     with_options presence: true do
-      validates :quantity, :delivery_number, :price, :number, :variant, :parent_order, :frequency
+      validates :quantity, :delivery_number, :price, :number, :parent_order, :frequency
       validates :cancellation_reasons, :cancelled_at, if: :cancelled
       validates :ship_address, :bill_address, :next_occurrence_at, :source, if: :enabled?
     end
