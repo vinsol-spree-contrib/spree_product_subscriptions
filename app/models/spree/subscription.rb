@@ -209,6 +209,7 @@ module Spree
 
       def order_attributes
         {
+          email: parent_order.email,
           currency: parent_order.currency,
           guest_token: parent_order.guest_token,
           store: parent_order.store,
