@@ -180,6 +180,7 @@ module Spree
       end
 
       def add_variant_to_order(order)
+        variant = Spree::Variant.random_variant
         order.contents.add(variant, quantity)
         order.next
       end
