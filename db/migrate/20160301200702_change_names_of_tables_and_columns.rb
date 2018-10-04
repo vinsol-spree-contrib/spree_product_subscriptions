@@ -1,4 +1,4 @@
-class ChangeNamesOfTablesAndColumns < ActiveRecord::Migration
+class ChangeNamesOfTablesAndColumns < ActiveRecord::Migration[5.1]
   def up
     change_column_default :spree_subscriptions, :quantity, 0
     change_column_null :spree_subscriptions, :quantity, false

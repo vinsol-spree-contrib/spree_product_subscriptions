@@ -18,7 +18,6 @@ end
 
 require 'rspec/rails'
 require 'database_cleaner'
-require 'factory_girl'
 require 'ffaker'
 require 'shoulda-matchers'
 require 'shoulda-callback-matchers'
@@ -28,17 +27,16 @@ require 'spree/testing_support/url_helpers'
 require "spree/testing_support/authorization_helpers"
 require "spree/testing_support/controller_requests"
 require 'spree/testing_support/preferences'
-require 'spree/testing_support/shoulda_matcher_configuration'
 require 'rspec/active_model/mocks'
-require 'spree_product_subscriptions/factories'
 
 RSpec.configure do |config|
+  config.include(Shoulda::Matchers::ActiveModel, type: :model)
+  config.include(Shoulda::Matchers::ActiveRecord, type: :model)
   config.mock_with :rspec
   config.use_transactional_fixtures = false
   config.fail_fast = false
   config.filter_run focus: true
   config.run_all_when_everything_filtered = true
-  config.include FactoryGirl::Syntax::Methods
   config.infer_spec_type_from_file_location!
   config.raise_errors_for_deprecations!
   config.expect_with :rspec do |expectations|

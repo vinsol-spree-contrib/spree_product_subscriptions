@@ -1,4 +1,4 @@
-class ChangePauseNullInSpreeSubscriptions < ActiveRecord::Migration
+class ChangePauseNullInSpreeSubscriptions < ActiveRecord::Migration[5.1]
   def up
     change_column_null :spree_subscriptions, :paused, false
     add_index :spree_subscriptions, :paused

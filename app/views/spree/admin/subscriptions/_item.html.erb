@@ -7,7 +7,7 @@
     </div>
     <table class="table table-bordered line-items" data-hook="line-items">
       <thead>
-        <th colspan="2"><%= Spree.t(:name) %></th>
+        <th colspan="2">Woo ID</th>
         <th class="text-center">
           <%= f.label :price, Spree.t(:price) %><span class="required">*</span>
         </th>
@@ -21,31 +21,24 @@
       <tbody>
         <tr class="line-item" id="line-item-<%= @subscription.id %>">
           <td class="line-item-image image text-center">
-            <%= mini_image(@subscription.variant) %>
+            <%= @subscription.woo_id %>
           </td>
           <td class="line-item-name text-center">
-            <%= collection_select(:subscription, :variant_id, @subscription.variant.product_variants, :id, :name, {}, data: { subscription_id: @subscription.id }) %>
           </td>
           <td class="line-item-price text-center">
             <div data-hook="admin_subscription_price_form" data-subscription-id="<%= @subscription.id %>">
-              <%= f.field_container :price, class: ["form-group"] do %>
-                <%= f.text_field :price, class: "form-control", disabled: @subscription.not_changeable? %>
-                <%= f.error_message_on :price %>
-              <% end %>
+
             </div>
           </td>
           <td class="line-item-qty-show text-center">
             <div data-hook="admin_subscription_quantity_form">
-              <%= f.field_container :quantity, class: ["form-group"] do %>
-                <%= number_field :subscription, :quantity, { min: 1, disabled: @subscription.not_changeable? } %>
-                <%= f.error_message_on :quantity %>
-              <% end %>
+
             </div>
           </td>
           <td class="line-item-qty-edit">
             <div data-hook="admin_subscription_frequency_form">
               <%= f.field_container :frequency, class: ["form-group"] do %>
-                <%= f.collection_select :subscription_frequency_id, @subscription.variant.product.subscription_frequencies, :id, :title, {}, { class: "form-control", disabled: @subscription.not_changeable? } %>
+                <%= f.collection_select :subscription_frequency_id, Spree::SubscriptionFrequency.all, :id, :title, {}, { class: "form-control", disabled: @subscription.not_changeable? } %>
                 <%= f.error_message_on :frequency %>
               <% end %>
             </div>

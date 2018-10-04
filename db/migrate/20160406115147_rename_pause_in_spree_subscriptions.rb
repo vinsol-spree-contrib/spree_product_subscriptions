@@ -1,4 +1,4 @@
-class RenamePauseInSpreeSubscriptions < ActiveRecord::Migration
+class RenamePauseInSpreeSubscriptions < ActiveRecord::Migration[5.1]
   def up
     rename_column :spree_subscriptions, :pause, :paused
   end

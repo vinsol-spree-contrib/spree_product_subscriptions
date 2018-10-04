@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :monthly_subscription_frequency, class: Spree::SubscriptionFrequency do
     title "monthly"
     months_count 1
