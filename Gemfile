@@ -9,7 +9,7 @@ group :test do
   gem 'rails-controller-testing', '~> 1.0.1'
 end
 
-gem 'spree', github: 'spree/spree', branch: 'master'
+gem 'spree', '~> 4.0'
 gem 'spree_auth_devise', github: 'spree/spree_auth_devise'
 
 gemspec
