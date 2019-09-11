@@ -22,7 +22,7 @@ RSpec.describe Spree::SubscriptionNotifier do
 
     it 'renders the subject' do
       expect(mail.subject).to eq(I18n.t(:subject, scope: [:spree, :subscription_notifier, :notify_for_next_delivery],
-        number: active_subscription.number, frequency: active_subscription.frequency.title.capitalize).squeeze(' '))
+        number: active_subscription.number, frequency: active_subscription.frequency.title.capitalize))
     end
 
     it 'renders the receiver email' do

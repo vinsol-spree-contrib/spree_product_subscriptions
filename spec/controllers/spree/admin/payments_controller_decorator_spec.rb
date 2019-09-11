@@ -20,8 +20,7 @@ describe Spree::Admin::PaymentsController, type: :controller do
     let(:payment_methods_without_check) { [credit_card_payment_method] }
 
     before do
-      allow(Spree::Order).to receive(:friendly).and_return(orders)
-      allow(orders).to receive(:find).and_return(order)
+      allow(Spree::Order).to receive(:find_by).and_return(order)
       allow(order).to receive(:subscriptions).and_return(subscriptions)
     end
 
@@ -34,8 +33,7 @@ describe Spree::Admin::PaymentsController, type: :controller do
 
         context "expects to receive" do
           after { do_new }
-          it { expect(Spree::Order).to receive(:friendly).and_return(orders) }
-          it { expect(orders).to receive(:find).and_return(order) }
+          it { expect(Spree::Order).to receive(:find_by).and_return(order) }
           it { expect(order).to receive(:subscriptions).and_return(subscriptions) }
           it { expect(subscriptions).to receive(:any?).and_return(true) }
           it { expect(Spree::Gateway).to receive(:available_on_back_end).and_return(payment_methods_without_check) }
@@ -55,8 +53,7 @@ describe Spree::Admin::PaymentsController, type: :controller do
 
         context "expects to receive" do
           after { do_new }
-          it { expect(Spree::Order).to receive(:friendly).and_return(orders) }
-          it { expect(orders).to receive(:find).and_return(order) }
+          it { expect(Spree::Order).to receive(:find_by).and_return(order) }
           it { expect(order).to receive(:subscriptions).and_return(subscriptions) }
           it { expect(subscriptions).to receive(:any?).and_return(false) }
           it { expect(Spree::PaymentMethod).to receive(:available_on_back_end).and_return(payment_methods) }
@@ -78,8 +75,7 @@ describe Spree::Admin::PaymentsController, type: :controller do
 
         context "expects to receive" do
           after { do_new }
-          it { expect(Spree::Order).to receive(:friendly).and_return(orders) }
-          it { expect(orders).to receive(:find).and_return(order) }
+          it { expect(Spree::Order).to receive(:find_by).and_return(order) }
           it { expect(order).to receive(:subscriptions).and_return(subscriptions) }
           it { expect(subscriptions).to receive(:any?).and_return(true) }
           it { expect(Spree::Gateway).to receive(:available_on_back_end).and_return(payment_methods_without_check) }
@@ -100,8 +96,7 @@ describe Spree::Admin::PaymentsController, type: :controller do
 
         context "expects to receive" do
           after { do_new }
-          it { expect(Spree::Order).to receive(:friendly).and_return(orders) }
-          it { expect(orders).to receive(:find).and_return(order) }
+          it { expect(Spree::Order).to receive(:find_by).and_return(order) }
           it { expect(order).to receive(:subscriptions).and_return(subscriptions) }
           it { expect(subscriptions).to receive(:any?).and_return(false) }
           it { expect(Spree::PaymentMethod).to receive(:available_on_back_end).and_return(payment_methods) }
