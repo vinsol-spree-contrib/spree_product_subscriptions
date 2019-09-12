@@ -34,6 +34,7 @@ module Spree
     scope :disabled, -> { where(enabled: false) }
     scope :active, -> { where(enabled: true) }
     scope :not_cancelled, -> { where(cancelled_at: nil) }
+    scope :with_appropriate_delivery_time, -> { TimeSubscription.with_appropriate_delivery_time }
     scope :processable, -> { unpaused.active.not_cancelled }
     scope :with_parent_orders, -> (orders) { where(parent_order: orders) }
 
@@ -58,6 +59,7 @@ module Spree
     before_cancel :set_cancellation_reason, if: :can_set_cancellation_reason?
 
     before_create :set_type
+
     before_validation :set_cancelled_at, if: :can_set_cancelled_at?
     before_update :not_cancelled?
     before_validation :update_price, on: :update, if: :variant_id_changed?

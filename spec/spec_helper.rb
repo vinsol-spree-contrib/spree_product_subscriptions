@@ -29,11 +29,8 @@ require "spree/testing_support/authorization_helpers"
 require "spree/testing_support/controller_requests"
 require 'spree/testing_support/preferences'
 require 'rspec/active_model/mocks'
-<<<<<<< HEAD
-=======
-require 'spree_product_subscriptions/factories'
+require 'spree_product_subscriptions/spec/factories'
 require "cancan/matchers"
->>>>>>> 17e406c... update specs, renamed ability file, modify gem versions
 
 Shoulda::Matchers.configure do |config|
   config.integrate do |with|
@@ -48,10 +45,6 @@ RSpec.configure do |config|
   config.fail_fast = false
   config.filter_run focus: true
   config.run_all_when_everything_filtered = true
-<<<<<<< HEAD
-=======
-  config.include FactoryBot::Syntax::Methods
->>>>>>> 17e406c... update specs, renamed ability file, modify gem versions
   config.infer_spec_type_from_file_location!
   config.raise_errors_for_deprecations!
   config.expect_with :rspec do |expectations|
