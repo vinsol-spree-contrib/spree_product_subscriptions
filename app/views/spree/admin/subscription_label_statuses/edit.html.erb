@@ -1,0 +1,10 @@
+<% content_for :page_title do %>
+  <%= Spree.t(:editing_resource, resource: Spree::SubscriptionLabelStatus.model_name.human) %>
+<% end %>
+
+<%= form_for @subscription_label_status, url: object_url, method: :put do |f| %>
+  <fieldset>
+    <%= render partial: 'form', locals: { f: f } %>
+    <%= render partial: 'spree/admin/shared/edit_resource_links' %>
+  </fieldset>
+<% end %>

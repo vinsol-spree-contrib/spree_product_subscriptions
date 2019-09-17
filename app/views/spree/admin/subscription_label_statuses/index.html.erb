@@ -1,0 +1,34 @@
+<% content_for :page_title do %>
+  <%= plural_resource_name(Spree::SubscriptionLabelStatus) %>
+<% end %>
+
+<% content_for :page_actions do %>
+  <%= button_link_to Spree.t(:new_subscription_label_status), new_object_url, icon: 'add', class: 'btn-success' %>
+<% end %>
+
+<% if @subscription_label_statuses.present? %>
+  <table class="table">
+    <thead>
+      <th><%= Spree::SubscriptionLabelStatus.human_attribute_name :title %></th>
+      <th><%= Spree::SubscriptionLabelStatus.human_attribute_name :label_status %></th>
+      <th></th>
+    </thead>
+    <tbody>
+      <% @subscription_label_statuses.each do |subscription_label_status| %>
+        <tr>
+          <td><%= subscription_label_status.title.titleize %></td>
+          <td><%= subscription_label_status.label_status %></td>
+          <td class="actions actions-2 text-right">
+            <%= link_to_edit subscription_label_status, no_text: true %>
+            <%= link_to_delete subscription_label_status, no_text: true %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <div class="alert alert-info no-objects-found">
+    <%= Spree.t(:no_resource_found, resource: plural_resource_name(Spree::SubscriptionLabelStatus)) %>,
+    <%= link_to Spree.t(:add_one), new_object_url %>!
+  </div>
+<% end %>

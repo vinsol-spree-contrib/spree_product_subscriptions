@@ -10,4 +10,8 @@
     <%= builder.label { builder.check_box(class: "subscribable-option") + builder.text } %>
     <br>
   <% end %>
+  <%= f.collection_check_boxes :subscription_label_status_ids, Spree::SubscriptionLabelStatus.all, :id, :title, { include_hidden: false } do |builder| %>
+    <%= builder.label { builder.check_box(class: "subscribable-option") + builder.text } %>
+    <br>
+  <% end %>
 </div>
