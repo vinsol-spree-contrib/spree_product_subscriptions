@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 module Spree::LineItemDecorator
   def self.prepended(base)
     base.attr_accessor :subscription_frequency_id, :subscription_label_status_id, :subscribe

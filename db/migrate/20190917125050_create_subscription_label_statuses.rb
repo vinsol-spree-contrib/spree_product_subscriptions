@@ -1,4 +1,4 @@
-class CreateSubscriptionLabelStatuses < ActiveRecord::Migration[4.2]
+class CreateSubscriptionLabelStatuses < ActiveRecord::Migration[5.2]
   def change
     create_table :spree_subscription_label_statuses do |t|
       t.string :title
