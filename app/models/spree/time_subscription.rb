@@ -11,10 +11,7 @@ module Spree
       validates :next_occurrence_at, if: :enabled?
     end
 
-    define_model_callbacks :unpause, only: [:before]
-    before_unpause :can_unpause?, :set_next_occurrence_at_after_unpause
-    define_model_callbacks :process, only: [:after]
-    after_process :notify_reoccurrence, if: :reoccurrence_notifiable?
+    before_unpause :set_next_occurrence_at_after_unpause
 
     before_validation :set_next_occurrence_at, if: :can_set_next_occurrence_at?
     before_update :next_occurrence_at_not_changed?, if: :paused?

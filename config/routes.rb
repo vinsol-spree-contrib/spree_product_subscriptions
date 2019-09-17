@@ -11,14 +11,6 @@ Spree::Core::Engine.routes.draw do
         patch :cancel
       end
     end
-    resources :time_subscriptions, except: [:new, :destroy, :show] do
-      member do
-        patch :pause
-        patch :unpause
-        get :cancellation
-        patch :cancel
-      end
-    end
   end
 
   resources :subscriptions, except: [:new, :destroy, :index, :show] do
@@ -28,8 +20,6 @@ Spree::Core::Engine.routes.draw do
       patch :cancel
     end
   end
-<<<<<<< HEAD
-=======
 
   resources :time_subscriptions, except: [:new, :destroy, :index, :show] do
     member do
@@ -39,5 +29,12 @@ Spree::Core::Engine.routes.draw do
     end
   end
 
->>>>>>> fb3dee0... Create STI from subscriptions
+  resources :label_status_subscriptions, except: [:new, :destroy, :show] do
+      member do
+        patch :pause
+        patch :unpause
+        patch :cancel
+      end
+    end
+
 end
