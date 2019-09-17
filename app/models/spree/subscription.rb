@@ -19,6 +19,7 @@ module Spree
     belongs_to :variant, inverse_of: :subscriptions
     belongs_to :source, polymorphic: true
     belongs_to :frequency, foreign_key: :subscription_frequency_id, class_name: "Spree::SubscriptionFrequency"
+    belongs_to :label_status, foreign_key: :subscription_label_status_id, class_name: "Spree::SubscriptionLabelStatus"
 
     accepts_nested_attributes_for :ship_address, :bill_address
 
@@ -45,7 +46,7 @@ module Spree
       validates :parent_order, uniqueness: { scope: :variant }
     end
     with_options presence: true do
-      validates :quantity, :delivery_number, :price, :number, :variant, :parent_order, :frequency
+      validates :quantity, :delivery_number, :price, :number, :variant, :parent_order
       validates :cancellation_reasons, :cancelled_at, if: :cancelled
       validates :ship_address, :bill_address, :next_occurrence_at, :source, if: :enabled?
     end
