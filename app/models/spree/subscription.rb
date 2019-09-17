@@ -34,9 +34,7 @@ module Spree
     scope :disabled, -> { where(enabled: false) }
     scope :active, -> { where(enabled: true) }
     scope :not_cancelled, -> { where(cancelled_at: nil) }
-    scope :with_appropriate_delivery_time, -> { TimeSubscription.with_appropriate_delivery_time }
     scope :processable, -> { unpaused.active.not_cancelled }
-    scope :eligible_for_subscription, -> { processable.with_appropriate_delivery_time }
     scope :with_parent_orders, -> (orders) { where(parent_order: orders) }
 
     with_options allow_blank: true do
@@ -48,14 +46,19 @@ module Spree
     with_options presence: true do
       validates :quantity, :delivery_number, :price, :number, :variant, :parent_order
       validates :cancellation_reasons, :cancelled_at, if: :cancelled
-      validates :ship_address, :bill_address, :next_occurrence_at, :source, if: :enabled?
+      validates :ship_address, :bill_address, :source, if: :enabled?
     end
 
     define_model_callbacks :pause, only: [:before]
     before_pause :can_pause?
+    define_model_callbacks :unpause, only: [:before]
+    before_unpause :can_unpause?
+    define_model_callbacks :process, only: [:after]
+    after_process :notify_reoccurrence, if: :reoccurrence_notifiable?
     define_model_callbacks :cancel, only: [:before]
     before_cancel :set_cancellation_reason, if: :can_set_cancellation_reason?
 
+    before_create :set_type
     before_validation :set_cancelled_at, if: :can_set_cancelled_at?
     before_update :not_cancelled?
     before_validation :update_price, on: :update, if: :variant_id_changed?
@@ -103,6 +106,10 @@ module Spree
     end
 
     private
+
+      def set_type
+        self.type = subscription_frequency_id ? 'Spree::TimeSubscription' : 'Spree::LabelStatusSubscription'
+      end
 
       def update_price
         if valid_variant?

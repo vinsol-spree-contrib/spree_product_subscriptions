@@ -18,6 +18,14 @@ Spree::Order.class_eval do
     end
   end
 
+  def all_shipments_has_label?
+    shipments.all? { |shipment| shipment.labels.any? }
+  end
+
+  def all_shipments_label_status_is?(label_status)
+    shipments.all? { |shipment| shipment.labels.all? { |label| label.state == label_status } }
+  end
+
   private
 
     def enable_subscriptions

@@ -77,7 +77,7 @@ module Spree
 
       def subscription_attributes
         params.require(:subscription).permit(:quantity, :next_occurrence_at, :delivery_number,
-          :subscription_frequency_id, :variant_id, :prior_notification_days_gap,
+          :subscription_frequency_id, :subscription_label_status_id, :variant_id, :prior_notification_days_gap,
           ship_address_attributes: [:firstname, :lastname, :address1, :address2, :city, :zipcode, :country_id, :state_id, :phone],
           bill_address_attributes: [:firstname, :lastname, :address1, :address2, :city, :zipcode, :country_id, :state_id, :phone])
       end

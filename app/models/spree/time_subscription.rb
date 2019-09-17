@@ -2,13 +2,16 @@ module Spree
   class TimeSubscription < Spree::Subscription
 
     scope :with_appropriate_delivery_time, -> { where("next_occurrence_at <= :current_date", current_date: Time.current) }
+    scope :eligible_for_subscription, -> { processable.with_appropriate_delivery_time }
 
     validate :next_occurrence_at_range, if: :next_occurrence_at
 
-    define_model_callbacks :unpause, only: [:before]
-    before_unpause :can_unpause?, :set_next_occurrence_at_after_unpause
-    define_model_callbacks :process, only: [:after]
-    after_process :notify_reoccurrence, if: :reoccurrence_notifiable?
+    with_options presence: true do
+      validates :frequency
+      validates :next_occurrence_at, if: :enabled?
+    end
+
+    before_unpause :set_next_occurrence_at_after_unpause
 
     before_validation :set_next_occurrence_at, if: :can_set_next_occurrence_at?
     before_update :next_occurrence_at_not_changed?, if: :paused?
