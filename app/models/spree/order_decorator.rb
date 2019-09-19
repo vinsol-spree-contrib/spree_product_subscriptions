@@ -24,11 +24,7 @@ module Spree::OrderDecorator
   end
 
   def all_shipments_label_status_is?(label_status)
-<<<<<<< HEAD
     shipments.all? { |shipment| shipment.labels.all? { |label| label.status == label_status } }
-=======
-    shipments.all? { |shipment| shipment.labels.all? { |label| label.state == label_status } }
->>>>>>> fd0af0d... Create LabelStatusSubscription
   end
 
   private

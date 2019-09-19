@@ -19,8 +19,8 @@
           </span>
         </td>
       </tr>
-      <% if @subscription.next_occurrence_at? %>
-        <tr>
+      <tr>
+        <% if @subscription.next_occurrence_at? %>
           <td>
             <strong><%= Spree.t(:next_occurrence_at) %>:</strong>
           </td>

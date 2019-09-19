@@ -20,6 +20,7 @@
 <%= render partial: 'spree/admin/shared/flash_messages' %>
 <%= render partial: 'spree/admin/shared/error_messages', locals: { target: @subscription } %>
 
+<% @subscription = @subscription.becomes(Spree::Subscription) %>
 <%= form_for [:admin, @subscription] do |f| %>
   <%= render partial: 'summary', locals: { f: f } %>
   <%= render partial: 'item', locals: { f: f } %>
