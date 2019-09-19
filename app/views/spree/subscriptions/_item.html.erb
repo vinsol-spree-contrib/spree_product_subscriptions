@@ -40,12 +40,7 @@
             </div>
           </td>
           <td class="line-item-qty-edit">
-            <div data-hook="admin_subscription_frequency_form">
-              <%= f.field_container :frequency, class: ["form-group"] do %>
-                <%= f.collection_select :subscription_frequency_id, @subscription.variant.product.subscription_frequencies, :id, :title, {}, { class: "form-control", disabled: @subscription.not_changeable? } %>
-                <%= f.error_message_on :frequency %>
-              <% end %>
-            </div>
+            <%= @subscription.frequency.title %>
           </td>
         </tr>
       </tbody>

@@ -1,5 +1,6 @@
 module Spree
   class LabelStatusSubscription < Spree::Subscription
+    alias_attribute :frequency, :label_status
 
     scope :has_orders, -> { joins(:orders) }
     scope :no_suborders, -> {

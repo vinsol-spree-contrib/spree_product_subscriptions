@@ -20,15 +20,20 @@
         </td>
       </tr>
       <tr>
-        <td>
-          <strong><%= Spree.t(:next_occurrence_at) %>:</strong>
-        </td>
-        <td id="next_occurrence_at">
-          <%= f.field_container :next_occurrence_at, class: ["form-group"] do %>
-            <%= f.text_field :next_occurrence_at, class: "form-control datepicker subscription_next_occurrence_at", disabled: @subscription.not_changeable? || @subscription.paused? %>
-            <%= f.error_message_on :next_occurrence_at %>
-          <% end %>
-        </td>
+        <% if @subscription.next_occurrence_at? %>
+          <td>
+            <strong><%= Spree.t(:next_occurrence_at) %>:</strong>
+          </td>
+          <td id="next_occurrence_at">
+            <%= f.field_container :next_occurrence_at, class: ["form-group"] do %>
+              <%= f.text_field :next_occurrence_at, class: "form-control datepicker subscription_next_occurrence_at", disabled: @subscription.not_changeable? || @subscription.paused? %>
+              <%= f.error_message_on :next_occurrence_at %>
+            <% end %>
+          </td>
+        <% else %>
+          <td><strong><%= Spree.t(:when_label_status) %>:</strong></td>
+          <td><span><%= @subscription.label_status.label_status %></span></td>
+        <% end %>
       </tr>
       <tr>
         <td>
