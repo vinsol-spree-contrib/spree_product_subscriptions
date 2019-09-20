@@ -54,7 +54,7 @@ module Spree
     define_model_callbacks :unpause, only: [:before]
     before_unpause :can_unpause?
     define_model_callbacks :process, only: [:after]
-    after_process :notify_reoccurrence, if: :reoccurrence_notifiable?
+    after_process :notify_reoccurrence
     define_model_callbacks :cancel, only: [:before]
     before_cancel :set_cancellation_reason, if: :can_set_cancellation_reason?
 
