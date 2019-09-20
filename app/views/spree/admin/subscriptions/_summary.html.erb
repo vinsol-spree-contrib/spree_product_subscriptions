@@ -30,24 +30,11 @@
               <%= f.error_message_on :next_occurrence_at %>
             <% end %>
           </td>
-        </tr>
-        <tr>
-          <td>
-            <strong><%= Spree.t(:prior_notification_days_gap) %></strong>
-          </td>
-          <td>
-            <div data-hook="prior_notification_days_gap">
-              <%= f.field_container :prior_notification_days_gap, class: ["form-group"] do %>
-                <%= number_field :subscription, :prior_notification_days_gap, class: "form-control", disabled: @subscription.not_changeable? %>
-                <%= f.error_message_on :prior_notification_days_gap %>
-              <% end %>
-            </div>
-          </td>
-        </tr>
-      <% else %>
-        <td><strong><%= Spree.t(:when_label_status) %>:</strong></td>
-        <td><span><%= @subscription.label_status.label_status %></span></td>
-      <% end %>
+        <% else %>
+          <td><strong><%= Spree.t(:when_label_status) %>:</strong></td>
+          <td><span><%= @subscription.label_status.label_status %></span></td>
+        <% end %>
+      </tr>
       <% if @subscription.cancelled? %>
         <tr id="cancellation_fields">
           <td>
