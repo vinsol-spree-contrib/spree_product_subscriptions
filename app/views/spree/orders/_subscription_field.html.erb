@@ -6,10 +6,3 @@
     Not Subscribed
   <% end %>
 </td>
-<td class="text-center">
-  <% if subscription %>
-    <%= item_form.number_field :delivery_number, class: "form-control", min: 1, value: subscription.delivery_number %>
-  <% else %>
-    None
-  <% end %>
-</td>

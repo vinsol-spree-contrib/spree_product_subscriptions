@@ -17,7 +17,7 @@ module Spree
     before_update :next_occurrence_at_not_changed?, if: :paused?
 
     def process
-      new_order = recreate_order if deliveries_remaining?
+      new_order = recreate_order
       update(next_occurrence_at: next_occurrence_at_value) if new_order.try :completed?
     end
 
@@ -38,11 +38,11 @@ module Spree
       end
 
       def next_occurrence_at_value
-        deliveries_remaining? ? Time.current + frequency.months_count.month : next_occurrence_at
+        Time.current + frequency.months_count.month
       end
 
       def can_set_next_occurrence_at?
-        enabled? && next_occurrence_at.nil? && deliveries_remaining?
+        enabled? && next_occurrence_at.nil?
       end
 
       def set_next_occurrence_at_after_unpause

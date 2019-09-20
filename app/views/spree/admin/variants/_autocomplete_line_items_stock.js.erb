@@ -9,7 +9,6 @@
       {{#if variant.subscribable}}
         <th class="text-center"><%= Spree.t(:subscribe?) %></th>
         <th class="text-center"><%= Spree.t(:frequency) %></th>
-        <th class="text-center"><%= Spree.t(:delivery_number) %></th>
       {{/if}}
       <th></th>
     </thead>
@@ -33,9 +32,6 @@
                     <option value="{{this.id}}">{{this.title}}</option>
                   {{/each}}
                 </select>
-              </td>
-              <td>
-                <input class="delivery_number form-control" id="variant_delivery_number" data-variant-id="{{variant.id}}" type="number" min="1" value="1"></input>
               </td>
             {{/if}}
             <td class="actions actions-1 text-center">

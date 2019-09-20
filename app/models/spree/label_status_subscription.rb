@@ -7,7 +7,7 @@ module Spree
     end
 
     def process
-      new_order = recreate_order if deliveries_remaining?
+      new_order = recreate_order
     end
 
     def can_be_proccesed?

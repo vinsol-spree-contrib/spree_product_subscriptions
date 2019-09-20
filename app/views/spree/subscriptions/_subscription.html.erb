@@ -4,14 +4,10 @@
   <td class="text-center subscription-price"><%= subscription.price %></td>
   <td class="text-center subscription-started"><%= subscription.parent_order.completed_at.to_date.to_formatted_s(:rfc822) %></td>
   <td class="text-center subscription-frequency"><%= subscription.frequency ? subscription.frequency.title.titleize : subscription.label_status.title.titleize %></td>
-  <td class="text-center subscription-delivery-number"><%= subscription.delivery_number %></td>
-  <td class="text-center subscription-deliveries-left"><%= subscription.number_of_deliveries_left %></td>
   <td class="subscription-action-links">
     <% @subscription = subscription %>
     <% if subscription.cancelled? %>
         Subscription Cancelled
-    <% elsif !subscription.deliveries_remaining? %>
-        Completed
     <% else %>
       <span id="pause_links"><%= render partial: 'spree/subscriptions/pause_links', locals: { btn_class: "btn-xs" } %></span>
       <%= link_to Spree.t(:edit), edit_subscription_path(subscription), class: "btn btn-xs btn-default" %>

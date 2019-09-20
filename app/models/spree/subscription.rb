@@ -40,11 +40,10 @@ module Spree
     with_options allow_blank: true do
       validates :price, numericality: { greater_than_or_equal_to: 0 }
       validates :quantity, numericality: { greater_than: 0, only_integer: true }
-      validates :delivery_number, numericality: { greater_than_or_equal_to: :recurring_orders_size, only_integer: true }
       validates :parent_order, uniqueness: { scope: :variant }
     end
     with_options presence: true do
-      validates :quantity, :delivery_number, :price, :number, :variant, :parent_order
+      validates :quantity, :price, :number, :variant, :parent_order
       validates :cancellation_reasons, :cancelled_at, if: :cancelled
       validates :ship_address, :bill_address, :source, if: :enabled?
     end
@@ -74,10 +73,6 @@ module Spree
       !!cancelled_at_was
     end
 
-    def number_of_deliveries_left
-      delivery_number.to_i - complete_orders.size - 1
-    end
-
     def pause
       run_callbacks :pause do
         update_attributes(paused: true)
@@ -97,12 +92,8 @@ module Spree
       end
     end
 
-    def deliveries_remaining?
-      number_of_deliveries_left > 0
-    end
-
     def not_changeable?
-      cancelled? || !deliveries_remaining?
+      cancelled?
     end
 
     private
@@ -129,11 +120,11 @@ module Spree
       end
 
       def can_pause?
-        enabled? && !cancelled? && deliveries_remaining? && !paused?
+        enabled? && !cancelled? && !paused?
       end
 
       def can_unpause?
-        enabled? && !cancelled? && deliveries_remaining? && paused?
+        enabled? && !cancelled? && paused?
       end
 
       def recreate_order
@@ -198,7 +189,7 @@ module Spree
       end
 
       def can_set_cancelled_at?
-        cancelled.present? && deliveries_remaining?
+        cancelled.present?
       end
 
       def set_cancellation_reason
@@ -206,7 +197,7 @@ module Spree
       end
 
       def can_set_cancellation_reason?
-        cancelled.present? && deliveries_remaining? && cancellation_reasons.nil?
+        cancelled.present? && cancellation_reasons.nil?
       end
 
       def notify_cancellation
