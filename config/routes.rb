@@ -20,21 +20,4 @@ Spree::Core::Engine.routes.draw do
       patch :cancel
     end
   end
-
-  resources :time_subscriptions, except: [:new, :destroy, :index, :show] do
-    member do
-      patch :pause
-      patch :unpause
-      patch :cancel
-    end
-  end
-
-  resources :label_status_subscriptions, except: [:new, :destroy, :show] do
-      member do
-        patch :pause
-        patch :unpause
-        patch :cancel
-      end
-    end
-
 end

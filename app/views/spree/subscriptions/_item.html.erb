@@ -40,7 +40,11 @@
             </div>
           </td>
           <td class="line-item-qty-edit">
-            <%= @subscription.frequency.title %>
+            <% if @subscription.frequency %>
+              <%= @subscription.frequency.title.titleize %>
+            <% else %>
+              <%= @subscription.label_status.title.titleize %>
+            <% end %>
           </td>
         </tr>
       </tbody>
