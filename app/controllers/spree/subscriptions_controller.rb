@@ -6,6 +6,7 @@ module Spree
     before_action :ensure_not_cancelled, only: [:update, :cancel, :pause, :unpause]
 
     def edit
+      @subscription = Spree::Subscription.find(params[:id]).becomes(Spree::Subscription)
     end
 
     def update

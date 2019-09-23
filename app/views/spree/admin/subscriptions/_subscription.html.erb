@@ -3,7 +3,7 @@
   <td><%= subscription.variant.name %></td>
   <td class="text-center"><%= subscription.price %></td>
   <td class="text-center">
-    <% if subscription.type == 'Spree::TimeSubscription' %>
+    <% if subscription.frequency %>
       <%= subscription.frequency.title.titleize %>
     <% else %>
       <%= subscription.label_status.title.titleize %>

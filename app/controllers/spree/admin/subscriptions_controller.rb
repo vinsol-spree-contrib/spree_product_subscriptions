@@ -5,6 +5,11 @@ module Spree
       before_action :ensure_not_cancelled, only: [:update, :cancel, :cancellation, :pause, :unpause]
 
       def cancellation
+        @subscription = Spree::Subscription.find(params[:id]).becomes(Spree::Subscription)
+      end
+
+      def edit
+        @subscription = Spree::Subscription.find(params[:id]).becomes(Spree::Subscription)
       end
 
       def cancel
