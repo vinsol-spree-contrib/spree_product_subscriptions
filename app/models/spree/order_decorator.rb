@@ -23,7 +23,7 @@ Spree::Order.class_eval do
   end
 
   def all_shipments_label_status_is?(label_status)
-    shipments.all? { |shipment| shipment.labels.all? { |label| label.state == label_status } }
+    shipments.all? { |shipment| shipment.labels.all? { |label| label.status == label_status } }
   end
 
   private
