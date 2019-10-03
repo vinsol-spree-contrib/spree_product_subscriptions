@@ -1,0 +1,10 @@
+<% content_for :page_title do %>
+  <%= Spree.t(:new_subscription_label_status) %>
+<% end %>
+
+<%= form_for @subscription_label_status, url: collection_url do |f| %>
+  <fieldset>
+    <%= render partial: 'form', locals: { f: f } %>
+    <%= render partial: 'spree/admin/shared/new_resource_links' %>
+  </fieldset>
+<% end %>

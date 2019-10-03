@@ -5,6 +5,11 @@ module Spree
       before_action :ensure_not_cancelled, only: [:update, :cancel, :cancellation, :pause, :unpause]
 
       def cancellation
+        @subscription = Spree::Subscription.find(params[:id]).becomes(Spree::Subscription)
+      end
+
+      def edit
+        @subscription = Spree::Subscription.find(params[:id]).becomes(Spree::Subscription)
       end
 
       def cancel
@@ -31,12 +36,14 @@ module Spree
       end
 
       def unpause
+        next_occurrence_at = @subscription.next_occurrence_at ?
+          @subscription.next_occurrence_at.to_date.to_formatted_s(:rfc822) : @subscription.label_status.title
         if @subscription.unpause
           render json: {
-            flash: t('.success', next_occurrence_at: @subscription.next_occurrence_at.to_date.to_formatted_s(:rfc822)),
+            flash: t('.success', next_occurrence_at: next_occurrence_at),
             url: pause_subscription_path(@subscription),
             button_text: Spree::Subscription::ACTION_REPRESENTATIONS[:pause],
-            next_occurrence_at: @subscription.next_occurrence_at.to_date,
+            next_occurrence_at: next_occurrence_at,
             confirmation: Spree.t("subscriptions.confirm.pause")
           }, status: 200
         else

@@ -19,34 +19,35 @@
           </span>
         </td>
       </tr>
-      <tr>
-        <td>
-          <strong><%= Spree.t(:next_occurrence_at) %>:</strong>
-        </td>
-        <td id="next_occurrence_at">
-          <%= f.field_container :next_occurrence_at, class: ["form-group"] do %>
-            <%= f.text_field :next_occurrence_at, class: "form-control datepicker subscription_next_occurrence_at", disabled: @subscription.not_changeable? || @subscription.paused? %>
-            <%= f.error_message_on :next_occurrence_at %>
-          <% end %>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <strong><%= Spree.t(:total_deliveries) %></strong>
-        </td>
-        <td>
-          <div data-hook="admin_subscription_delivery_number_form">
-            <%= f.field_container :delivery_number, class: ["form-group"] do %>
-              <%= number_field :subscription, :delivery_number, class: "form-control", disabled: @subscription.not_changeable? %>
-              <%= f.error_message_on :delivery_number %>
+      <% if @subscription.next_occurrence_at? %>
+        <tr>
+          <td>
+            <strong><%= Spree.t(:next_occurrence_at) %>:</strong>
+          </td>
+          <td id="next_occurrence_at">
+            <%= f.field_container :next_occurrence_at, class: ["form-group"] do %>
+              <%= f.text_field :next_occurrence_at, class: "form-control datepicker subscription_next_occurrence_at", disabled: @subscription.not_changeable? || @subscription.paused? %>
+              <%= f.error_message_on :next_occurrence_at %>
             <% end %>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td><strong><%= Spree.t(:deliveries_left) %></strong></td>
-        <td><%= @subscription.number_of_deliveries_left %></td>
-      </tr>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <strong><%= Spree.t(:prior_notification_days_gap) %></strong>
+          </td>
+          <td>
+            <div data-hook="prior_notification_days_gap">
+              <%= f.field_container :prior_notification_days_gap, class: ["form-group"] do %>
+                <%= number_field :subscription, :prior_notification_days_gap, class: "form-control", disabled: @subscription.not_changeable? %>
+                <%= f.error_message_on :prior_notification_days_gap %>
+              <% end %>
+            </div>
+          </td>
+        </tr>
+      <% else %>
+        <td><strong><%= Spree.t(:when_label_status) %>:</strong></td>
+        <td><span><%= @subscription.label_status.label_status %></span></td>
+      <% end %>
       <% if @subscription.cancelled? %>
         <tr id="cancellation_fields">
           <td>
