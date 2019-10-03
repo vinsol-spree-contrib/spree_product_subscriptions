@@ -40,6 +40,7 @@ en:
 
     admin:
       subscriptions:
+        title: "Spree Administrations: Subscriptions"
         pause:
           success: "Subscription is currently paused"
           error: "There was some failure in pausing subscription"
@@ -57,7 +58,7 @@ en:
       models:
         spree/subscription:
           attributes:
-            variant_id: 
+            variant_id:
               does_not_belong_to_product: 'does not belong to current product'
 
     required_authentication: 'Please Login Before Proceeding.'

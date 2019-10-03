@@ -1,5 +1,6 @@
 module Spree
   class SubscriptionsController < Spree::BaseController
+    include Spree::Core::ControllerHelpers::Order
 
     before_action :ensure_subscription
     before_action :ensure_not_cancelled, only: [:update, :cancel, :pause, :unpause]
