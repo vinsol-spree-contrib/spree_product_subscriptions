@@ -1,7 +1,9 @@
-Spree::OrdersController.class_eval do
+module Spree::OrdersControllerDecorator
 
-  before_action :add_subscription_fields, only: :populate, if: -> { params[:subscribe].present? }
-  before_action :restrict_guest_subscription, only: :update, unless: :spree_current_user
+  def self.prepend(base)
+    base.before_action :add_subscription_fields, only: :populate, if: -> { params[:subscribe].present? }
+    base.before_action :restrict_guest_subscription, only: :update, unless: :spree_current_user
+  end
 
   private
 
@@ -20,3 +22,5 @@ Spree::OrdersController.class_eval do
     end
 
 end
+
+::Spree::OrdersController.prepend(Spree::OrdersControllerDecorator)

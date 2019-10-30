@@ -91,7 +91,7 @@ AjaxHandler.prototype.handlePatchSuccess = function($target, response) {
   }
   $target.toggleClass("btn-success");
   $target.toggleClass("btn-warning");
-  $("#success_flash_message").html(response.flash).removeClass("hidden");
+  $("#success_flash_message").html(response.flash).removeClass("d-none");
   var $symbol = $target.find(".icon");
   $symbol.toggleClass("icon-pause").toggleClass("icon-play");
   if (!$target.find(".translation_missing").length && !$symbol.length) {
@@ -103,20 +103,20 @@ AjaxHandler.prototype.handlePatchSuccess = function($target, response) {
 
 AjaxHandler.prototype.handleCancelSuccess = function($target, response) {
   this.hideFlashDivs();
-  $("#success_flash_message").html(response.flash).removeClass("hidden");
+  $("#success_flash_message").html(response.flash).removeClass("d-none");
   $('[data-id="' + response.subscription_id + '"] .subscription-action-links').html("Subscription Cancelled");
 };
 
 AjaxHandler.prototype.handleErrorResponse = function($target, response) {
   this.hideFlashDivs();
-  $("#error_flash_message").html(response.flash).removeClass("hidden");
+  $("#error_flash_message").html(response.flash).removeClass("d-none");
 };
 
 AjaxHandler.prototype.hideFlashDivs = function() {
   $("#html_error_flash_message").remove();
-  $("#error_flash_message").addClass("hidden");
+  $("#error_flash_message").addClass("d-none");
   $("#html_success_flash_message").remove();
-  $("#success_flash_message").addClass("hidden");
+  $("#success_flash_message").addClass("d-none");
 };
 
 $(function (){
