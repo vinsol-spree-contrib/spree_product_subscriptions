@@ -1,8 +1,5 @@
 source 'https://rubygems.org'
 
-gem 'spree', '~> 4.0'
-gem 'spree_auth_devise', '~> 4.0'
-
 gem 'byebug', group: [:development, :test]
 
 group :test do
@@ -10,6 +7,6 @@ group :test do
 end
 
 gem 'spree', '~> 4.0'
-gem 'spree_auth_devise', github: 'spree/spree_auth_devise'
+gem 'spree_auth_devise', '~> 4.0'
 
 gemspec
