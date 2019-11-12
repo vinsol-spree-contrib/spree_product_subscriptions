@@ -1,14 +1,15 @@
-Spree::Order.class_eval do
-
-  has_one :order_subscription, class_name: "Spree::OrderSubscription", dependent: :destroy
-  has_one :parent_subscription, through: :order_subscription, source: :subscription
-  has_many :subscriptions, class_name: "Spree::Subscription",
+module Spree::OrderDecorator
+  def self.prepended(base)
+    base.has_one :order_subscription, class_name: "Spree::OrderSubscription", dependent: :destroy
+    base.has_one :parent_subscription, through: :order_subscription, source: :subscription
+    base.has_many :subscriptions, class_name: "Spree::Subscription",
                            foreign_key: :parent_order_id,
                            dependent: :restrict_with_error
 
-  self.state_machine.after_transition to: :complete, do: :enable_subscriptions, if: :any_disabled_subscription?
+    base.after_update :update_subscriptions
 
-  after_update :update_subscriptions
+    base.state_machine.after_transition to: :complete, do: :enable_subscriptions, if: :any_disabled_subscription?
+  end
 
   def available_payment_methods
     if subscriptions.exists?
@@ -52,3 +53,5 @@ Spree::Order.class_eval do
     end
 
 end
+
+::Spree::Order.prepend(Spree::OrderDecorator)
