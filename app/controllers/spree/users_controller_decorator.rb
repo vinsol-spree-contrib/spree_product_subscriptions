@@ -1,6 +1,8 @@
-Spree::UsersController.class_eval do
+module Spree::UsersControllerDecorator
 
-  before_action :load_subscriptions, only: :show
+  def self.prepended(base)
+    base.before_action :load_subscriptions, only: :show
+  end
 
   private
 
@@ -10,3 +12,5 @@ Spree::UsersController.class_eval do
     end
 
 end
+
+::Spree::UsersController.prepend(Spree::UsersControllerDecorator)

@@ -1,6 +1,6 @@
 Deface::Override.new(
   virtual_path: 'spree/layouts/admin',
   name: 'subscriptions_admin_tab',
-  insert_bottom: '#main-sidebar',
+  insert_bottom: '#main-sidebar > nav',
   partial: 'spree/admin/shared/subscriptions_sidebar_menu'
 )

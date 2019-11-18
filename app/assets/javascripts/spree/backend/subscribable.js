@@ -23,12 +23,12 @@ Subscribable.prototype.bindParentCheckboxEvent = function() {
 };
 
 Subscribable.prototype.enableChildCheckboxes = function() {
-  this.$childCheckboxesDiv.removeClass("hidden");
+  this.$childCheckboxesDiv.removeClass("d-none");
   this.$childCheckboxesDiv.find("input").removeAttr("disabled");
 };
 
 Subscribable.prototype.disableChildCheckboxes = function() {
-  this.$childCheckboxesDiv.addClass("hidden");
+  this.$childCheckboxesDiv.addClass("d-none");
   this.$childCheckboxesDiv.find("input").attr("disabled", "disabled");
 }
 
