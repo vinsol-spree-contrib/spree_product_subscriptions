@@ -1,3 +1,7 @@
+<% content_for :title do %>
+  Spree Administration: Subscriptions
+<% end %>
+
 <% content_for :page_title do %>
   Subscriptions
 <% end %>
@@ -32,7 +36,8 @@
         <th class="text-center"><%= Spree.t(:recurring_delivery_interval) %></th>
         <th class="text-center"><%= Spree.t(:total_deliveries) %></th>
         <th class="text-center"><%= Spree.t(:deliveries_left) %></th>
-        <th data-hook="admin_subscriptions_index_header_actions" class="actions"></th>
+        <th class="text-center"><%= Spree.t(:next_occurrence_possible) %></th>
+        <th data-hook="admin_subscriptions_index_header_actions" class="actions"><%= Spree.t(:action_links)%></th>
       </tr>
     </thead>
     <tbody>

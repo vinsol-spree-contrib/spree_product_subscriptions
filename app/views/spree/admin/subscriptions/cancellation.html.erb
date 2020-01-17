@@ -1,3 +1,7 @@
+<% content_for :title do %>
+  Spree Administration: Cancel <%= Spree::Subscription.model_name.human %> <%= @subscription.number %>
+<% end %>
+
 <% content_for :page_title do %>
   Cancel <%= Spree::Subscription.model_name.human %> <%= @subscription.number %>
 <% end %>

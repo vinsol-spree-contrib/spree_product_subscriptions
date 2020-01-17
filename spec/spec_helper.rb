@@ -18,7 +18,7 @@ end
 
 require 'rspec/rails'
 require 'database_cleaner'
-require 'factory_girl'
+require 'factory_bot'
 require 'ffaker'
 require 'shoulda-matchers'
 require 'shoulda-callback-matchers'
@@ -28,9 +28,16 @@ require 'spree/testing_support/url_helpers'
 require "spree/testing_support/authorization_helpers"
 require "spree/testing_support/controller_requests"
 require 'spree/testing_support/preferences'
-require 'spree/testing_support/shoulda_matcher_configuration'
 require 'rspec/active_model/mocks'
 require 'spree_product_subscriptions/factories'
+require "cancan/matchers"
+
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
+    with.library :rails
+  end
+end
 
 RSpec.configure do |config|
   config.mock_with :rspec
@@ -38,7 +45,7 @@ RSpec.configure do |config|
   config.fail_fast = false
   config.filter_run focus: true
   config.run_all_when_everything_filtered = true
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
   config.infer_spec_type_from_file_location!
   config.raise_errors_for_deprecations!
   config.expect_with :rspec do |expectations|
@@ -62,7 +69,8 @@ RSpec.configure do |config|
   end
   config.include Spree::TestingSupport::ControllerRequests, type: :controller
   config.include Spree::TestingSupport::UrlHelpers
-  config.include Devise::TestHelpers, type: :controller
+  config.include Devise::Test::ControllerHelpers, type: :controller
+  config.include(Shoulda::Callback::Matchers::ActiveModel)
 
 end
 

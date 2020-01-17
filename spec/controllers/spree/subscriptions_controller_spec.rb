@@ -222,6 +222,8 @@ describe Spree::SubscriptionsController, type: :controller do
       spree_get :edit, params
     end
 
+    it { is_expected.to use_before_action(:ensure_subscription_belongs_to_user) }
+
     describe "when subscription is found" do
       before do
         allow(Spree::Subscription).to receive(:active).and_return(subscriptions)
@@ -259,6 +261,18 @@ describe Spree::SubscriptionsController, type: :controller do
         it { expect(response).to redirect_to account_path }
         it { expect(flash[:error]).to eq Spree.t("subscriptions.alert.missing") }
       end
+    end
+
+    describe '#ensure_subscription_belongs_to_user' do
+      let(:user) { create(:user) }
+      let(:order) { create(:completed_order_with_totals) }
+      let(:subscription) { create(:valid_subscription, enabled: true, parent_order: order, next_occurrence_at: Time.current) }
+
+      it "is expected to authorize user's ability to update subscription" do
+        expect(controller).to receive(:authorize!).with(:update, subscription)
+      end
+
+      after { do_edit({ id: subscription.id }) }
     end
   end
 

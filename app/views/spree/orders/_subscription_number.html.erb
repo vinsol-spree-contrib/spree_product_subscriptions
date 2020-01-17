@@ -1,0 +1,3 @@
+<% if @order.order_subscription %>
+  <h4>Subscription Number: <%= link_to @order.order_subscription.subscription.number, edit_subscription_path(@order.order_subscription.subscription) %></h4>
+<% end %>

@@ -50,7 +50,7 @@
         <td>
           <div data-hook="prior_notification_days_gap">
             <%= f.field_container :prior_notification_days_gap, class: ["form-group"] do %>
-              <%= number_field :subscription, :prior_notification_days_gap, class: "form-control", disabled: @subscription.not_changeable? %>
+              <%= number_field :subscription, :prior_notification_days_gap, class: "form-control", disabled: @subscription.not_changeable?, max: days_left_for_next_occurrence, min: 0 %>
               <%= f.error_message_on :prior_notification_days_gap %>
             <% end %>
           </div>

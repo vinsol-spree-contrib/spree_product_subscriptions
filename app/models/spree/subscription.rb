@@ -45,11 +45,12 @@ module Spree
       validates :parent_order, uniqueness: { scope: :variant }
     end
     with_options presence: true do
-      validates :quantity, :delivery_number, :price, :number, :variant, :parent_order, :frequency
+      validates :quantity, :delivery_number, :price, :number, :variant, :parent_order, :frequency, :prior_notification_days_gap
       validates :cancellation_reasons, :cancelled_at, if: :cancelled
       validates :ship_address, :bill_address, :next_occurrence_at, :source, if: :enabled?
     end
     validate :next_occurrence_at_range, if: :next_occurrence_at
+    validate :prior_notification_days_gap_value, if: :prior_notification_days_gap
 
     define_model_callbacks :pause, only: [:before]
     before_pause :can_pause?
@@ -67,9 +68,15 @@ module Spree
     before_update :next_occurrence_at_not_changed?, if: :paused?
     after_update :notify_user, if: :user_notifiable?
     after_update :notify_cancellation, if: :cancellation_notifiable?
+    after_update :update_next_occurrence_at
 
     def process
-      new_order = recreate_order if deliveries_remaining?
+      if (variant.stock_items.sum(:count_on_hand) >= quantity || variant.stock_items.any? { |stock| stock.backorderable? }) && (!variant.product.discontinued?)
+        update_column(:next_occurrence_possible, true)
+      else
+        update_column(:next_occurrence_possible, false)
+      end
+      new_order = recreate_order if (deliveries_remaining? && next_occurrence_possible)
       update(next_occurrence_at: next_occurrence_at_value) if new_order.try :completed?
     end
 
@@ -171,6 +178,7 @@ module Spree
         add_variant_to_order(order)
         add_shipping_address(order)
         add_delivery_method_to_order(order)
+        add_shipping_costs_to_order(order)
         add_payment_method_to_order(order)
         confirm_order(order)
         order
@@ -191,8 +199,25 @@ module Spree
         order.next
       end
 
+      # select shipping method which was selected in original order.
       def add_delivery_method_to_order(order)
+        selected_shipping_method_id = parent_order.inventory_units.where(variant_id: variant.id).first.shipment.shipping_method.id
+
+        order.shipments.each do |shipment|
+          current_shipping_rate = shipment.shipping_rates.find_by(selected: true)
+          proposed_shipping_rate = shipment.shipping_rates.find_by(shipping_method_id: selected_shipping_method_id)
+
+          if proposed_shipping_rate.present? && current_shipping_rate != proposed_shipping_rate
+            current_shipping_rate.update(selected: false)
+            proposed_shipping_rate.update(selected: true)
+          end
+        end
+
         order.next
+      end
+
+      def add_shipping_costs_to_order(order)
+        order.set_shipments_cost
       end
 
       def add_payment_method_to_order(order)
@@ -273,5 +298,16 @@ module Spree
         end
       end
 
+      def update_next_occurrence_at
+        update_column(:next_occurrence_at, next_occurrence_at_value)
+      end
+
+      def prior_notification_days_gap_value
+        return if next_occurrence_at_value.nil?
+
+        if Time.current + prior_notification_days_gap.days >= next_occurrence_at_value
+          errors.add(:prior_notification_days_gap, Spree.t('subscriptions.error.should_be_earlier_than_next_delivery'))
+        end
+      end
   end
 end

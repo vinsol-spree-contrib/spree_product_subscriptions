@@ -11,7 +11,7 @@
           <%= render partial: 'spree/admin/shared/address', locals: { address: @subscription.bill_address } %>
         <% else %>
           <%= f.fields_for :bill_address do |ba_form| %>
-            <%= render partial: 'spree/admin/shared/address_form', locals: { f: ba_form, type: "billing" } %>
+            <%= render partial: 'spree/address/form', locals: { form: ba_form, address_type: 'billing', address: @subscription.bill_address } %>
           <% end %>
         <% end %>
       </div>
@@ -28,7 +28,7 @@
           <%= render partial: 'spree/admin/shared/address', locals: { address: @subscription.ship_address } %>
         <% else %>
           <%= f.fields_for :ship_address do |sa_form| %>
-            <%= render partial: 'spree/admin/shared/address_form', locals: { f: sa_form, type: 'shipping' } %>
+            <%= render partial: 'spree/address/form', locals: { form: sa_form, address_type: 'shipping', address: @subscription.ship_address } %>
           <% end %>
         <% end %>
       </div>
