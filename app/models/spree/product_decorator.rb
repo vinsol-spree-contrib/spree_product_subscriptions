@@ -13,8 +13,9 @@ module Spree::ProductDecorator
     base.scope :subscribable, -> { where(subscribable: true) }
 
     base.whitelisted_ransackable_attributes += %w( is_subscribable )
+
+    base.validates :subscription_label_statuses, presence: true, if: :subscribable?
   end
-  # validates :subscription_frequencies, presence: true, if: :subscribable?
 end
 
 ::Spree::Product.prepend(Spree::ProductDecorator)
