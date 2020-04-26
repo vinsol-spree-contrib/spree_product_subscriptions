@@ -9,8 +9,8 @@ describe Spree::SubscriptionsController, type: :controller do
   let(:subscriptions) { double(ActiveRecord::Relation) }
 
   describe "Callbacks" do
-    def do_cancel params
-      spree_post :cancel, params
+    def do_cancel(params)
+      post :cancel, params: params
     end
 
     describe "#ensure_subscription" do
@@ -65,7 +65,7 @@ describe Spree::SubscriptionsController, type: :controller do
 
       context "json request" do
         context "when subscription is present" do
-          let(:params) { { id: active_subscription.id, format: :json } }
+          let(:params) { { id: active_subscription.id } }
 
           before do
             allow(Spree::Subscription).to receive(:active).and_return(subscriptions)
@@ -90,7 +90,7 @@ describe Spree::SubscriptionsController, type: :controller do
         end
 
         context "when subscription is not present" do
-          let(:params) { { id: "", format: :json } }
+          let(:params) { { id: '' } }
 
           before do
             allow(Spree::Subscription).to receive(:active).and_return(subscriptions)
@@ -167,7 +167,7 @@ describe Spree::SubscriptionsController, type: :controller do
 
       context "json request" do
         context "when subscription is cancelled" do
-          let(:params) { { id: cancelled_subscription.id, format: :json } }
+          let(:params) { { id: cancelled_subscription.id } }
 
           before do
             allow(Spree::Subscription).to receive(:active).and_return(subscriptions)
@@ -190,7 +190,7 @@ describe Spree::SubscriptionsController, type: :controller do
         end
 
         context "when subscription is not cancelled" do
-          let(:params) { { id: active_subscription.id, format: :json } }
+          let(:params) { { id: active_subscription.id } }
 
           before do
             allow(Spree::Subscription).to receive(:active).and_return(subscriptions)
@@ -218,8 +218,8 @@ describe Spree::SubscriptionsController, type: :controller do
   end
 
   describe "edit" do
-    def do_edit params
-      spree_get :edit, params
+    def do_edit(params)
+      get :edit, params: params
     end
 
     it { is_expected.to use_before_action(:ensure_subscription_belongs_to_user) }
@@ -277,8 +277,8 @@ describe Spree::SubscriptionsController, type: :controller do
   end
 
   describe "update" do
-    def do_update params
-      spree_put :update, params
+    def do_update(params)
+      put :update, params: params
     end
 
     describe "when subscription is found" do
@@ -305,7 +305,6 @@ describe Spree::SubscriptionsController, type: :controller do
 
         describe "response" do
           context 'when request.json?' do
-            before { do_update(params.merge(format: :json)) }
             it { expect(response).to have_http_status 200 }
             it { expect(response.body['subscription']).not_to be_nil }
           end
@@ -338,7 +337,6 @@ describe Spree::SubscriptionsController, type: :controller do
 
         describe "response" do
           context 'when request.json?' do
-            before { do_update(params.merge(format: :json)) }
             it { expect(response).to have_http_status 422 }
             it { expect(response.body['errors']).not_to be_nil }
           end
@@ -374,7 +372,7 @@ describe Spree::SubscriptionsController, type: :controller do
 
   describe "pause" do
     def do_pause
-      spree_post :pause, format: :json, id: active_subscription.id
+      post :pause, params: { id: active_subscription.id }
     end
 
     before do
@@ -426,7 +424,7 @@ describe Spree::SubscriptionsController, type: :controller do
 
   describe "unpause" do
     def do_unpause
-      spree_post :unpause, format: :json, id: active_subscription.id
+      post :unpause, params: { id: active_subscription.id }
     end
 
     before do
@@ -478,8 +476,8 @@ describe Spree::SubscriptionsController, type: :controller do
 
   describe "cancel" do
     describe "html response" do
-      def do_cancel params
-        spree_post :cancel, params
+      def do_cancel(params)
+        post :cancel, params: params
       end
 
       before do
@@ -533,7 +531,7 @@ describe Spree::SubscriptionsController, type: :controller do
 
     describe "json response" do
       def do_cancel
-        spree_post :cancel, format: :json, id: active_subscription.id
+        post :cancel, params: { id: active_subscription.id }
       end
 
       before do

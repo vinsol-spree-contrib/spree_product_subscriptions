@@ -41,22 +41,6 @@ describe Spree::Order, type: :model do
       it { expect { order_with_subscriptions.send :enable_subscriptions }.to change { order_with_subscriptions.subscriptions.disabled.count }.by -1 }
     end
 
-    context "#update_subscriptions" do
-      context "when subscription attributes present" do
-        let(:line_item) { create(:line_item, variant: disabled_subscription.variant) }
-        def add_new_line_item
-          line_item.delivery_number = 6
-          order_with_subscriptions.line_items << line_item
-          order_with_subscriptions.send :update_subscriptions
-        end
-        it { expect { add_new_line_item }.to change { disabled_subscription.reload.delivery_number }.from(4).to(6) }
-      end
-
-      context "when subscription attributes not present" do
-        it { expect { order_with_subscriptions.send :update_subscriptions }.to change { disabled_subscription.delivery_number }.by 0 }
-      end
-    end
-
     context "state machine" do
       it { expect { incompleted_order.next }.to change { incompleted_order.subscriptions.disabled.count }.by -1 }
     end

@@ -23,14 +23,13 @@ require 'ffaker'
 require 'shoulda-matchers'
 require 'shoulda-callback-matchers'
 require 'pry'
-require "spree/testing_support/factories"
+require 'spree/testing_support/factories'
 require 'spree/testing_support/url_helpers'
-require "spree/testing_support/authorization_helpers"
-require "spree/testing_support/controller_requests"
+require 'spree/testing_support/authorization_helpers'
+require 'spree/testing_support/controller_requests'
 require 'spree/testing_support/preferences'
 require 'rspec/active_model/mocks'
-require 'spree_product_subscriptions/spec/factories'
-require "cancan/matchers"
+require 'cancan/matchers'
 
 Shoulda::Matchers.configure do |config|
   config.integrate do |with|
