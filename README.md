@@ -9,6 +9,16 @@ Spree Product Subscriptions is an extension to let users have time interval base
 
 * Once subscribed, subscription orders will automatically be created for the user at the selected time interval.
 
+Demo
+----
+Try Spree Product Subscriptions for Spree master with direct deployment on Heroku:
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/vinsol-spree-contrib/spree-demo-heroku/tree/spree-product-subscriptions-master)
+
+Try Spree Product Subscriptions for Spree 3-4 with direct deployment on Heroku:
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/vinsol-spree-contrib/spree-demo-heroku/tree/spree-product-subscriptions-3-4)
+
 Installation
 ------------
 

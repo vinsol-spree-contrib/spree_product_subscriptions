@@ -1,8 +1,9 @@
 module Spree
-  class SubscriptionsController < Spree::BaseController
+  class SubscriptionsController < Spree::StoreController
     include Spree::Core::ControllerHelpers::Order
 
     before_action :ensure_subscription
+    before_action :ensure_subscription_belongs_to_user, only: :edit
     before_action :ensure_not_cancelled, only: [:update, :cancel, :pause, :unpause]
 
     def edit
@@ -102,6 +103,10 @@ module Spree
             format.json { render json: { flash: Spree.t("subscriptions.error.not_changeable") }, status: 422 }
           end
         end
+      end
+
+      def ensure_subscription_belongs_to_user
+        authorize! :update, @subscription
       end
 
   end

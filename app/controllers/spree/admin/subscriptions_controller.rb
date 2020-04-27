@@ -1,6 +1,6 @@
 module Spree
   module Admin
-    class SubscriptionsController < Spree::Admin::ResourceController
+    class SubscriptionsController < ResourceController
 
       before_action :ensure_not_cancelled, only: [:update, :cancel, :cancellation, :pause, :unpause]
 

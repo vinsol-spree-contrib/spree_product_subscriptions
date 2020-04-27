@@ -1,6 +1,6 @@
 module Spree
   module Admin
-    class SubscriptionFrequenciesController < Spree::Admin::ResourceController
+    class SubscriptionFrequenciesController < ResourceController
     end
   end
 end

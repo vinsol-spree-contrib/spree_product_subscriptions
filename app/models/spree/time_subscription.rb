@@ -49,6 +49,10 @@ module Spree
         self.next_occurrence_at = (Time.current > next_occurrence_at) ? next_occurrence_at + frequency.months_count.month : next_occurrence_at
       end
 
+      def reoccurrence_notifiable?
+        next_occurrence_at_changed? && !!next_occurrence_at_was
+      end
+
       def next_occurrence_at_not_changed?
         !next_occurrence_at_changed?
       end

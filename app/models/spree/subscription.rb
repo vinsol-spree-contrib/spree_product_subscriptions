@@ -54,6 +54,7 @@ module Spree
     before_unpause :can_unpause?
     define_model_callbacks :process, only: [:after]
     after_process :notify_reoccurrence
+
     define_model_callbacks :cancel, only: [:before]
     before_cancel :set_cancellation_reason, if: :can_set_cancellation_reason?
 
@@ -132,6 +133,7 @@ module Spree
         add_variant_to_order(order)
         add_shipping_address(order)
         add_delivery_method_to_order(order)
+        add_shipping_costs_to_order(order)
         add_payment_method_to_order(order)
         confirm_order(order)
         order
@@ -152,8 +154,25 @@ module Spree
         order.next
       end
 
+      # select shipping method which was selected in original order.
       def add_delivery_method_to_order(order)
+        selected_shipping_method_id = parent_order.inventory_units.where(variant_id: variant.id).first.shipment.shipping_method.id
+
+        order.shipments.each do |shipment|
+          current_shipping_rate = shipment.shipping_rates.find_by(selected: true)
+          proposed_shipping_rate = shipment.shipping_rates.find_by(shipping_method_id: selected_shipping_method_id)
+
+          if proposed_shipping_rate.present? && current_shipping_rate != proposed_shipping_rate
+            current_shipping_rate.update(selected: false)
+            proposed_shipping_rate.update(selected: true)
+          end
+        end
+
         order.next
+      end
+
+      def add_shipping_costs_to_order(order)
+        order.set_shipments_cost
       end
 
       def add_payment_method_to_order(order)
@@ -219,6 +238,5 @@ module Spree
       def user_notifiable?
         enabled? && enabled_changed?
       end
-
   end
 end

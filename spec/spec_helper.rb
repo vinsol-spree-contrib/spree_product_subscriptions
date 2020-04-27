@@ -29,6 +29,8 @@ require "spree/testing_support/authorization_helpers"
 require "spree/testing_support/controller_requests"
 require 'spree/testing_support/preferences'
 require 'rspec/active_model/mocks'
+require 'spree_product_subscriptions/spec/factories'
+require "cancan/matchers"
 
 Shoulda::Matchers.configure do |config|
   config.integrate do |with|
@@ -71,7 +73,8 @@ RSpec.configure do |config|
   end
   config.include Spree::TestingSupport::ControllerRequests, type: :controller
   config.include Spree::TestingSupport::UrlHelpers
-  config.include Devise::TestHelpers, type: :controller
+  config.include Devise::Test::ControllerHelpers, type: :controller
+  config.include(Shoulda::Callback::Matchers::ActiveModel)
 
 end
 

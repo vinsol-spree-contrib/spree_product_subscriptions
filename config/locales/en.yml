@@ -33,6 +33,7 @@ en:
       error:
         out_of_range: "Next Occurrence cannot be before today's date"
         not_changeable: "Subscription is either cancelled or all the deliveries are done."
+        should_be_earlier_than_next_delivery: 'should be earlier than next delivery'
       confirm:
         pause: "Are you sure you want to pause this subscription"
         activate: "Are you sure you want to activate this subscription"
@@ -53,6 +54,8 @@ en:
           confirm: "Once cancelled, subscription can not be enabled again"
         error_on_already_cancelled: "Cancelled Subscription can not be processed."
 
+    required_authentication: 'Please Login Before Proceeding.'
+
   activerecord:
     errors:
       models:
@@ -61,4 +64,3 @@ en:
             variant_id:
               does_not_belong_to_product: 'does not belong to current product'
 
-    required_authentication: 'Please Login Before Proceeding.'
