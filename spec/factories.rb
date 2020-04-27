@@ -4,15 +4,13 @@ FactoryBot.define do
     months_count { 1 }
   end
 
-  factory :nil_attributes_subscription, class: Spree::Subscription do
+  factory :nil_attributes_subscription, class: Spree::Subscriptions::Period do
   end
 
-  factory :valid_subscription, class: Spree::Subscription do
+  factory :valid_subscription, class: Spree::Subscriptions::Period do
     price { 20.00 }
     quantity { 2 }
-    delivery_number { 4 }
     association :variant, factory: :base_variant
-    association :frequency, factory: :monthly_subscription_frequency
     association :parent_order, factory: :completed_order_with_totals
     association :ship_address, factory: :address
     association :bill_address, factory: :address

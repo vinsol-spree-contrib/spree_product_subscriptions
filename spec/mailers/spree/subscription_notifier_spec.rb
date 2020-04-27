@@ -15,7 +15,6 @@ RSpec.describe Spree::SubscriptionNotifier do
       allow(active_subscription).to receive(:parent_order).and_return(order)
       allow(active_subscription).to receive(:frequency).and_return(subscription_frequency)
       allow(active_subscription).to receive(:variant).and_return(variant)
-      allow(active_subscription).to receive(:number_of_deliveries_left).and_return(1)
       allow(variant).to receive(:product).and_return(product)
       allow(variant).to receive(:options_text).and_return('')
     end

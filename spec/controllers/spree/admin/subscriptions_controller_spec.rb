@@ -8,8 +8,8 @@ describe Spree::Admin::SubscriptionsController, type: :controller do
   let(:cancelled_subscription) { mock_model(Spree::Subscription, id: 2, cancelled_at: Time.current, cancellation_reasons: "Test") }
 
   describe "#cancellation" do
-    def do_cancellation params
-      spree_get :cancellation, params
+    def do_cancellation(params)
+      get :cancellation, params: params
     end
 
     let(:params) { { id: active_subscription.id } }
@@ -34,7 +34,7 @@ describe Spree::Admin::SubscriptionsController, type: :controller do
 
   describe "pause" do
     def do_pause
-      spree_post :pause, format: :json, id: active_subscription.id
+      post :pause, params: { id: active_subscription.id }
     end
 
     before do
@@ -83,7 +83,7 @@ describe Spree::Admin::SubscriptionsController, type: :controller do
 
   describe "unpause" do
     def do_unpause
-      spree_post :unpause, format: :json, id: active_subscription.id
+      post :unpause, params: { id: active_subscription.id }
     end
 
     before do
@@ -130,8 +130,8 @@ describe Spree::Admin::SubscriptionsController, type: :controller do
     end
   end
 
-  def do_cancel params
-    spree_post :cancel, params
+  def do_cancel(params)
+    post :cancel, params: params
   end
 
   describe "#Cancel" do
@@ -191,8 +191,8 @@ describe Spree::Admin::SubscriptionsController, type: :controller do
 
   describe "callbacks" do
     describe "#ensure_not_cancelled" do
-      def do_cancellation params
-        spree_get :cancellation, params
+      def do_cancellation(params)
+        get :cancellation, params: params
       end
 
       context "when subscription is cancelled" do
@@ -242,7 +242,7 @@ describe Spree::Admin::SubscriptionsController, type: :controller do
 
     describe "#collection" do
       def do_index
-        spree_get :index
+        get :index
       end
 
       let(:subscriptions) { double(ActiveRecord::Relation) }

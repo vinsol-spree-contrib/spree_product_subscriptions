@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Spree::Subscription, type: :model do
+describe Spree::Subscriptions::Period, type: :model do
 
   let(:last_ip_address) { "127.0.0.1" }
   let(:order) { create(:completed_order_with_totals, last_ip_address: last_ip_address) }
@@ -8,7 +8,7 @@ describe Spree::Subscription, type: :model do
   let(:nil_attributes_subscription) { build(:nil_attributes_subscription) }
   let(:active_subscription) { create(:valid_subscription, enabled: true, parent_order: order, next_occurrence_at: just_passed_time) }
   let(:disabled_subscription) { create(:valid_subscription, enabled: false) }
-  let(:completed_subscription) { create(:valid_subscription, enabled: true, delivery_number: 1, next_occurrence_at: Time.current + 10.days) }
+  let(:completed_subscription) { create(:valid_subscription, enabled: true, next_occurrence_at: Time.current + 10.days) }
   let(:paused_subscription) { create(:valid_subscription, paused: true, enabled: true, next_occurrence_at: just_passed_time) }
   let(:cancelled_subscription) { create(:valid_subscription, cancelled_at: Time.current, cancellation_reasons: "Test") }
   let(:subscription_with_recreated_orders) { create(:valid_subscription, orders: orders, next_occurrence_at: just_passed_time) }
@@ -19,7 +19,6 @@ describe Spree::Subscription, type: :model do
     before { subject.frequency = frequency }
 
     it { is_expected.to validate_presence_of(:quantity) }
-    it { is_expected.to validate_presence_of(:delivery_number) }
     it { is_expected.to validate_presence_of(:price) }
     context "validates presence of number" do
       context "when number is absent" do
@@ -37,7 +36,6 @@ describe Spree::Subscription, type: :model do
     end
     it { is_expected.to validate_presence_of(:variant) }
     it { is_expected.to validate_presence_of(:parent_order) }
-    it { is_expected.to validate_presence_of(:frequency) }
     it { is_expected.to validate_presence_of(:prior_notification_days_gap) }
 
     context "if cancelled present" do
@@ -51,14 +49,6 @@ describe Spree::Subscription, type: :model do
             nil_attributes_subscription.save
           end
           it { expect(nil_attributes_subscription.cancelled_at).to be_present }
-        end
-
-        context "when cancelled_at is absent" do
-          before do
-            nil_attributes_subscription.cancelled = true
-            nil_attributes_subscription.save
-          end
-          it { expect(nil_attributes_subscription.cancelled_at).to_not be_present }
         end
       end
     end
@@ -75,20 +65,11 @@ describe Spree::Subscription, type: :model do
           end
           it { expect(nil_attributes_subscription.next_occurrence_at).to be_present }
         end
-
-        context "when next_occurrence_at is absent" do
-          before do
-            nil_attributes_subscription.enabled = true
-            nil_attributes_subscription.save
-          end
-          it { expect(nil_attributes_subscription.next_occurrence_at).to_not be_present }
-        end
       end
       it { expect(subject).to validate_presence_of(:source) }
     end
     it { is_expected.to validate_numericality_of(:price).is_greater_than_or_equal_to(0).allow_nil }
     it { is_expected.to validate_numericality_of(:quantity).is_greater_than(0).only_integer.allow_nil }
-    it { is_expected.to validate_numericality_of(:delivery_number).is_greater_than_or_equal_to(subject.send :recurring_orders_size).only_integer.allow_nil }
   end
 
   describe "associations" do
@@ -117,7 +98,6 @@ describe Spree::Subscription, type: :model do
     it { is_expected.to callback(:can_unpause?).before(:unpause) }
     it { is_expected.to callback(:set_next_occurrence_at_after_unpause).before(:unpause) }
     it { is_expected.to callback(:set_cancellation_reason).before(:cancel).if(:can_set_cancellation_reason?) }
-    it { is_expected.to callback(:notify_reoccurrence).after(:process).if(:reoccurrence_notifiable?) }
   end
 
   describe "attr_accessors" do
@@ -127,58 +107,58 @@ describe Spree::Subscription, type: :model do
 
   describe "scopes" do
     context ".disabled" do
-      it { expect(Spree::Subscription.disabled).to include disabled_subscription }
-      it { expect(Spree::Subscription.disabled).to_not include active_subscription }
+      it { expect(Spree::Subscriptions::Period.disabled).to include disabled_subscription }
+      it { expect(Spree::Subscriptions::Period.disabled).to_not include active_subscription }
     end
 
     context ".active" do
-      it { expect(Spree::Subscription.active).to include active_subscription }
-      it { expect(Spree::Subscription.active).to_not include disabled_subscription }
+      it { expect(Spree::Subscriptions::Period.active).to include active_subscription }
+      it { expect(Spree::Subscriptions::Period.active).to_not include disabled_subscription }
     end
 
     context ".not_cancelled" do
-      it { expect(Spree::Subscription.not_cancelled).to include active_subscription }
-      it { expect(Spree::Subscription.not_cancelled).to_not include cancelled_subscription }
+      it { expect(Spree::Subscriptions::Period.not_cancelled).to include active_subscription }
+      it { expect(Spree::Subscriptions::Period.not_cancelled).to_not include cancelled_subscription }
     end
 
     context ".processable" do
-      it { expect(Spree::Subscription.processable).to include active_subscription }
-      it { expect(Spree::Subscription.processable).to_not include disabled_subscription }
-      it { expect(Spree::Subscription.processable).to_not include cancelled_subscription }
-      it { expect(Spree::Subscription.processable).to_not include paused_subscription }
+      it { expect(Spree::Subscriptions::Period.processable).to include active_subscription }
+      it { expect(Spree::Subscriptions::Period.processable).to_not include disabled_subscription }
+      it { expect(Spree::Subscriptions::Period.processable).to_not include cancelled_subscription }
+      it { expect(Spree::Subscriptions::Period.processable).to_not include paused_subscription }
     end
 
     context ".eligible_for_subscription" do
-      it { expect(Spree::Subscription.eligible_for_subscription).to include active_subscription }
-      it { expect(Spree::Subscription.eligible_for_subscription).to_not include disabled_subscription }
-      it { expect(Spree::Subscription.eligible_for_subscription).to_not include cancelled_subscription }
-      it { expect(Spree::Subscription.eligible_for_subscription).to_not include paused_subscription }
+      it { expect(Spree::Subscriptions::Period.eligible_for_subscription).to include active_subscription }
+      it { expect(Spree::Subscriptions::Period.eligible_for_subscription).to_not include disabled_subscription }
+      it { expect(Spree::Subscriptions::Period.eligible_for_subscription).to_not include cancelled_subscription }
+      it { expect(Spree::Subscriptions::Period.eligible_for_subscription).to_not include paused_subscription }
     end
 
     context ".with_parent_orders" do
-      it { expect(Spree::Subscription.with_parent_orders(order)).to include active_subscription }
-      it { expect(Spree::Subscription.with_parent_orders(order)).to_not include disabled_subscription }
+      it { expect(Spree::Subscriptions::Period.with_parent_orders(order)).to include active_subscription }
+      it { expect(Spree::Subscriptions::Period.with_parent_orders(order)).to_not include disabled_subscription }
     end
 
     context ".paused" do
-      it { expect(Spree::Subscription.paused).to include paused_subscription }
-      it { expect(Spree::Subscription.paused).to_not include active_subscription }
+      it { expect(Spree::Subscriptions::Period.paused).to include paused_subscription }
+      it { expect(Spree::Subscriptions::Period.paused).to_not include active_subscription }
     end
 
     context ".unpaused" do
-      it { expect(Spree::Subscription.unpaused).to_not include paused_subscription }
-      it { expect(Spree::Subscription.unpaused).to include active_subscription }
+      it { expect(Spree::Subscriptions::Period.unpaused).to_not include paused_subscription }
+      it { expect(Spree::Subscriptions::Period.unpaused).to include active_subscription }
     end
 
     context ".with_appropriate_delivery_time" do
-      it { expect(Spree::Subscription.with_appropriate_delivery_time).to include active_subscription }
-      it { expect(Spree::Subscription.with_appropriate_delivery_time).to_not include disabled_subscription }
+      it { expect(Spree::Subscriptions::Period.with_appropriate_delivery_time).to include active_subscription }
+      it { expect(Spree::Subscriptions::Period.with_appropriate_delivery_time).to_not include disabled_subscription }
     end
   end
 
   describe "ransackable" do
     context "whitelisted ransackable associations" do
-      it { expect(Spree::Subscription.whitelisted_ransackable_associations).to include "parent_order" }
+      it { expect(Spree::Subscriptions::Period.whitelisted_ransackable_associations).to include "parent_order" }
     end
   end
 
@@ -282,7 +262,7 @@ describe Spree::Subscription, type: :model do
       before { active_subscription.cancel }
       it { expect(active_subscription.cancelled_at).to_not be_nil }
       it { expect(active_subscription.cancellation_reasons).to_not be_nil }
-      it { expect(active_subscription.cancellation_reasons).to eq Spree::Subscription::USER_DEFAULT_CANCELLATION_REASON }
+      it { expect(active_subscription.cancellation_reasons).to eq Spree::Subscriptions::Period::USER_DEFAULT_CANCELLATION_REASON }
     end
 
     context "#not_changeable?" do
@@ -370,31 +350,6 @@ describe Spree::Subscription, type: :model do
       end
     end
 
-    context "#reoccurrence_notifiable?" do
-      context "when next_occurrence_at present and not changed" do
-        it { expect(subscription_with_recreated_orders.send :reoccurrence_notifiable?).to eq false }
-      end
-
-      context "when next_occurrence_at present and got changed" do
-        before { subscription_with_recreated_orders.next_occurrence_at = Time.current }
-        it { expect(subscription_with_recreated_orders.send :reoccurrence_notifiable?).to eq true }
-      end
-
-      context "when next_occurrence_at not present" do
-        it { expect(active_subscription.send :reoccurrence_notifiable?).to eq false }
-      end
-    end
-
-    context "#deliveries_remaining?" do
-      it { expect(subscription_with_recreated_orders.deliveries_remaining?).to eq true }
-      it { expect(active_subscription.deliveries_remaining?).to eq true }
-    end
-
-    context "#number_of_deliveries_left" do
-      let(:completed_order) { create(:completed_order_with_totals) }
-      it { expect { active_subscription.complete_orders << completed_order }.to change { active_subscription.number_of_deliveries_left }.by -1 }
-    end
-
     context "#cancellation_notifiable?" do
       context "when cancelled at present and not changed" do
         it { expect(cancelled_subscription.send :cancellation_notifiable?).to eq false }
@@ -440,7 +395,7 @@ describe Spree::Subscription, type: :model do
     context "#order_attributes" do
       it { expect(active_subscription.send :order_attributes).to eq ({
         currency: order.currency,
-        guest_token: order.guest_token,
+        token: order.token,
         store: order.store,
         user: order.user,
         created_by: order.user,
@@ -451,7 +406,7 @@ describe Spree::Subscription, type: :model do
     context "#order recreation" do
       let(:order_attributes) { {
         currency: order.currency,
-        guest_token: order.guest_token,
+        token: order.token,
         store: order.store,
         user: order.user,
         created_by: order.user,
@@ -472,7 +427,7 @@ describe Spree::Subscription, type: :model do
 
       context "#make_new_order" do
         it { expect(created_order.currency).to eq new_order.currency }
-        it { expect(created_order.guest_token).to eq new_order.guest_token }
+        it { expect(created_order.token).to eq new_order.token }
         it { expect(created_order.store).to eq new_order.store }
         it { expect(created_order.user).to eq new_order.user }
         it { expect(created_order.created_by).to eq new_order.created_by }
@@ -610,19 +565,6 @@ describe Spree::Subscription, type: :model do
         it 'is expected not to create an order' do
           expect { active_subscription.process }.to change { active_subscription.complete_orders.count }.by 1
         end
-      end
-
-      context "when no deliveries remaining" do
-        before do
-          active_subscription.delivery_number = 1
-          active_subscription.process
-        end
-        it { expect(active_subscription.reload.complete_orders.count).to eq 0 }
-        it { expect(active_subscription).to_not be_next_occurrence_at_changed }
-      end
-
-      context "when deliveries_remaining" do
-        it { expect { active_subscription.process }.to change { active_subscription.complete_orders.count }.by 1 }
       end
     end
 
