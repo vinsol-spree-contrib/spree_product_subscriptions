@@ -440,7 +440,7 @@ describe Spree::Subscription, type: :model do
     context "#order_attributes" do
       it { expect(active_subscription.send :order_attributes).to eq ({
         currency: order.currency,
-        guest_token: order.guest_token,
+        token: order.token,
         store: order.store,
         user: order.user,
         created_by: order.user,
@@ -451,7 +451,7 @@ describe Spree::Subscription, type: :model do
     context "#order recreation" do
       let(:order_attributes) { {
         currency: order.currency,
-        guest_token: order.guest_token,
+        token: order.token,
         store: order.store,
         user: order.user,
         created_by: order.user,
@@ -472,7 +472,7 @@ describe Spree::Subscription, type: :model do
 
       context "#make_new_order" do
         it { expect(created_order.currency).to eq new_order.currency }
-        it { expect(created_order.guest_token).to eq new_order.guest_token }
+        it { expect(created_order.token).to eq new_order.token }
         it { expect(created_order.store).to eq new_order.store }
         it { expect(created_order.user).to eq new_order.user }
         it { expect(created_order.created_by).to eq new_order.created_by }

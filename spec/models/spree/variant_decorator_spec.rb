@@ -11,7 +11,7 @@ describe Spree::Variant, type: :model do
   end
 
   describe 'alias method' do
-    it { expect(Spree::Variant.instance_method(:product_variants_including_master)).to eq Spree::Variant.instance_method(:product_variants) }
+    it { expect(Spree::Variant.instance_method(:product_variants).original_name).to eq(:product_variants_including_master) }
   end
 
 end

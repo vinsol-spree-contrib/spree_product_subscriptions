@@ -8,7 +8,8 @@ describe Spree::Admin::PaymentsController, type: :controller do
   stub_authorization!
 
   def do_new
-    spree_get :new, order_id: order.number
+    # spree_get :new, order_id: order.number
+    get :new, params: { order_id: order.number }
   end
 
   describe "method overrides" do

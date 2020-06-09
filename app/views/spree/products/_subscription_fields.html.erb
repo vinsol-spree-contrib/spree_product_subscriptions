@@ -20,7 +20,7 @@
     </span>
     <br>
     <span class='input-group-btn'>
-      <%= button_tag class: 'btn btn-success', id: 'subscribe-button', type: :submit, name: :subscribe, value: '1' do %>
+      <%= button_tag class: 'btn btn-primary w-100 text-uppercase font-weight-bold subscribe-now-button', id: 'subscribe-button', type: :submit, name: :subscribe, value: '1', disabled: true do %>
         <%= Spree.t(:subscribe_now) %>
       <% end %>
     </span>

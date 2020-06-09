@@ -7,7 +7,8 @@ describe Spree::UsersController, type: :controller do
   describe "Callbacks" do
     describe "#load_subscriptions" do
       def do_show
-        spree_get :show
+        # spree_get :show
+        get :show
       end
 
       let(:orders) { double(ActiveRecord::Relation) }

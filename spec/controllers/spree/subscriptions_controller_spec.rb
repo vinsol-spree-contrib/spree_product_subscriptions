@@ -10,7 +10,8 @@ describe Spree::SubscriptionsController, type: :controller do
 
   describe "Callbacks" do
     def do_cancel params
-      spree_post :cancel, params
+      # spree_post :cancel, params
+      post :cancel, params: params
     end
 
     describe "#ensure_subscription" do
@@ -219,7 +220,8 @@ describe Spree::SubscriptionsController, type: :controller do
 
   describe "edit" do
     def do_edit params
-      spree_get :edit, params
+      # spree_get :edit, params
+      get :edit, params: params
     end
 
     it { is_expected.to use_before_action(:ensure_subscription_belongs_to_user) }
@@ -278,7 +280,8 @@ describe Spree::SubscriptionsController, type: :controller do
 
   describe "update" do
     def do_update params
-      spree_put :update, params
+      # spree_put :update, params
+      put :update, params: params
     end
 
     describe "when subscription is found" do
@@ -374,7 +377,8 @@ describe Spree::SubscriptionsController, type: :controller do
 
   describe "pause" do
     def do_pause
-      spree_post :pause, format: :json, id: active_subscription.id
+      # spree_post :pause, format: :json, id: active_subscription.id
+      post :pause, params: { format: :json, id: active_subscription.id }
     end
 
     before do
@@ -426,7 +430,8 @@ describe Spree::SubscriptionsController, type: :controller do
 
   describe "unpause" do
     def do_unpause
-      spree_post :unpause, format: :json, id: active_subscription.id
+      # spree_post :unpause, format: :json, id: active_subscription.id
+      post :unpause, params: { format: :json, id: active_subscription.id }
     end
 
     before do
@@ -479,7 +484,8 @@ describe Spree::SubscriptionsController, type: :controller do
   describe "cancel" do
     describe "html response" do
       def do_cancel params
-        spree_post :cancel, params
+        # spree_post :cancel, params
+        post :cancel, params: params
       end
 
       before do
@@ -533,7 +539,8 @@ describe Spree::SubscriptionsController, type: :controller do
 
     describe "json response" do
       def do_cancel
-        spree_post :cancel, format: :json, id: active_subscription.id
+        # spree_post :cancel, format: :json, id: active_subscription.id
+        post :cancel, params: { format: :json, id: active_subscription.id }
       end
 
       before do
