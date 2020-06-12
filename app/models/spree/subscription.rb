@@ -100,7 +100,7 @@ module Spree
     private
 
       def set_type
-        self.type = subscription_frequency_id ? 'Spree::Subscriptions::Period' : 'Spree::Subscriptions::LabelStatus'
+        self.sub_type = subscription_frequency_id ? 'Spree::Subscriptions::Period' : 'Spree::Subscriptions::LabelStatus'
       end
 
       def update_price
