@@ -1,7 +1,9 @@
 <td class='cart-item-subscription text-center' data-hook='cart_item_subscription'>
   <% subscription = @order.subscriptions.find_by(variant: item.variant) %>
   <% if subscription %>
-    <%= subscription.frequency.title.capitalize %>
+    <%= subscription.type_of_sub == 'frequency' ?
+      subscription.frequency.title.capitalize :
+      subscription.label_status.title.capitalize %>
   <% else %>
     Not Subscribed
   <% end %>
