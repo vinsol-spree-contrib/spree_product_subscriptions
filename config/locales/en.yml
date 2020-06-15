@@ -5,6 +5,10 @@ en:
   hello: "Hello world"
 
   spree:
+    subscription_order: "Subscription Order"
+    recurring_delivery_interval: "Recurring Delivery Interval"
+    total_deliveries: "Total Deliveries"
+    subscribe_now: "Subscribe Now"
     subscription_notifier:
       notify_confirmation:
         subject: "%{frequency} %{number} Subscription Confirmation"
