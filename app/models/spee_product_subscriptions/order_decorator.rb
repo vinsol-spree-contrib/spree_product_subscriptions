@@ -11,14 +11,6 @@ module SpreeProductSubscriptions::OrderDecorator
     base.alias_attribute :guest_token, :token
   end
 
-  def available_payment_methods
-    if subscriptions.exists?
-      @available_payment_methods = Spree::Gateway.active.available_on_front_end
-    else
-      @available_payment_methods ||= Spree::PaymentMethod.active.available_on_front_end
-    end
-  end
-
   private
 
     def enable_subscriptions
