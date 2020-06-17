@@ -14,17 +14,14 @@ CartRadioButton.prototype.bindEvents = function() {
 };
 
 CartRadioButton.prototype.toggleDiv = function($checkBox) {
-  $($checkBox.val()).show();
-  this.hideOtherDivs();
-};
-
-CartRadioButton.prototype.hideOtherDivs = function() {
-  $.each(this.$radioButtons, function(index, value) {
-    $checkBox = $(value);
-    if (!$checkBox.prop("checked")) {
-      $($checkBox.val()).hide();
-    }
-  });
+  let value = $checkBox.val();
+  $(value).show();
+  if (value.includes('subscription_options')) {
+    $('#add-to-cart-button').text('SUBSCRIBE NOW');
+  } else {
+    $('#add-to-cart-button').text('ADD TO CART');
+    $(value).siblings('.subscription_options').hide();
+  }
 };
 
 $(function() {
