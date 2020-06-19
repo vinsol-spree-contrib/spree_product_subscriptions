@@ -6,12 +6,8 @@ class SubscriptionAbility
       can :manage, :all
     else
       can :create, ::Spree::Subscription
-      can :read, ::Spree::Subscription do |subscription|
-        subscription.parent_order.user == user
-      end
-      can :update, ::Spree::Subscription do |subscription|
-        subscription.parent_order.user == user
-      end
+      can :read, ::Spree::Subscription if user.orders.pluck(:id).include?(:parent_order_id)
+      can :update, ::Spree::Subscription if user.orders.pluck(:id).include?(:parent_order_id)
     end
   end
 end
