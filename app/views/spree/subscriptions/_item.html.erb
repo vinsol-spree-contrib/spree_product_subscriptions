@@ -7,15 +7,11 @@
     </div>
     <table class="table table-bordered line-items" data-hook="line-items">
       <thead>
-        <th colspan="2"><%= Spree.t(:name) %></th>
-        <th class="text-center">
-          <%= f.label :price, Spree.t(:price) %><span class="required">*</span>
+        <th colspan="2" class="text-center">
+          <%= Spree.t(:name) %>
         </th>
         <th class="text-center">
-          <%= f.label :quantity, Spree.t(:quantity) %><span class="required">*</span>
-        </th>
-        <th class="text-center">
-          <%= f.label :frequency, Spree.t(:recurring_delivery_interval) %><span class="required">*</span>
+          <%= Spree.t(:price) %>
         </th>
       </thead>
       <tbody>
@@ -24,27 +20,15 @@
             <%= mini_image(@subscription.variant) %>
           </td>
           <td class="line-item-name text-center">
-            <%= collection_select(:subscription, :variant_id, @subscription.variant.product_variants, :id, :name, {}, data: { subscription_id: @subscription.id }) %>
+            <%= @subscription.variant.name + ' : ' +
+              @subscription.variant.option_values.find_by(
+                option_type_id: Spree::OptionType.find_by(name: 'size').id
+              ).presentation %>
           </td>
           <td class="line-item-price text-center">
             <div data-hook="admin_subscription_price_form" data-subscription-id="<%= @subscription.id %>">
-              <%= @subscription.price %>
+              <%= @subscription.variant.cost_price || @subscription.price %>
             </div>
-          </td>
-          <td class="line-item-qty-show text-center">
-            <div data-hook="admin_subscription_quantity_form">
-              <%= f.field_container :quantity, class: ["form-group"] do %>
-                <%= number_field :subscription, :quantity, { min: 1, disabled: @subscription.not_changeable? } %>
-                <%= f.error_message_on :quantity %>
-              <% end %>
-            </div>
-          </td>
-          <td class="line-item-qty-edit">
-            <% if @subscription.frequency %>
-              <%= @subscription.frequency.title.titleize %>
-            <% else %>
-              <%= @subscription.label_status.title.titleize %>
-            <% end %>
           </td>
         </tr>
       </tbody>
