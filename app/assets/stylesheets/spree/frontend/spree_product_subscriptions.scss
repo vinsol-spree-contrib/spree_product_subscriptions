@@ -20,3 +20,23 @@ the installer will append this file to the app vendored assets here: 'vendor/ass
 .m-t-25 {
   margin-top: 10px;
 }
+
+.btn-sub-cancel,
+.tc-btn-dark-green {
+  background-color: #58928e;
+  &:hover {
+    background-color: darken(#58928e, 10%);
+
+  }
+}
+
+.btn-sub-cancel,
+.btn-sub-update {
+  margin-bottom: 1rem;
+
+}
+
+.btn-sub-cancel {
+  margin-left: 0.5rem;
+
+}
