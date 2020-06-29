@@ -25,9 +25,9 @@
                 option_type_id: Spree::OptionType.find_by(name: 'size').id
               ).presentation %>
           </td>
-          <td class="line-item-price text-center">
+          <td class="line-item-price text-right">
             <div data-hook="admin_subscription_price_form" data-subscription-id="<%= @subscription.id %>">
-              <%= @subscription.variant.cost_price || @subscription.price %>
+              <%= number_to_currency(@subscription.variant.cost_price) || number_to_currency(@subscription.price) %>
             </div>
           </td>
         </tr>
