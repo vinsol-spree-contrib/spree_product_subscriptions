@@ -9,7 +9,6 @@ describe Spree::Admin::SubscriptionsController, type: :controller do
 
   describe "#cancellation" do
     def do_cancellation params
-      # spree_get :cancellation, params
       get :cancellation, params: params
     end
 
@@ -35,7 +34,6 @@ describe Spree::Admin::SubscriptionsController, type: :controller do
 
   describe "pause" do
     def do_pause
-      # spree_post :pause, format: :json, id: active_subscription.id
       post :pause, params: { format: :json, id: active_subscription.id }
     end
 
@@ -85,7 +83,6 @@ describe Spree::Admin::SubscriptionsController, type: :controller do
 
   describe "unpause" do
     def do_unpause
-      # spree_post :unpause, format: :json, id: active_subscription.id
       post :unpause, params: { format: :json, id: active_subscription.id }
     end
 
@@ -134,7 +131,6 @@ describe Spree::Admin::SubscriptionsController, type: :controller do
   end
 
   def do_cancel params
-    # spree_post :cancel, params
     post :cancel, params: params
   end
 
@@ -196,7 +192,6 @@ describe Spree::Admin::SubscriptionsController, type: :controller do
   describe "callbacks" do
     describe "#ensure_not_cancelled" do
       def do_cancellation params
-        # spree_get :cancellation, params
         get :cancellation, params: params
       end
 
@@ -247,7 +242,6 @@ describe Spree::Admin::SubscriptionsController, type: :controller do
 
     describe "#collection" do
       def do_index
-        # spree_get :index
         get :index
       end
 

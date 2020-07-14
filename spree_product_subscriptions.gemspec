@@ -33,4 +33,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'simplecov', '~> 0.11.2'
   s.add_development_dependency 'sqlite3', '~> 1.4'
   s.add_development_dependency 'appraisal'
+  s.add_development_dependency 'deface', '~> 1.0'
 end

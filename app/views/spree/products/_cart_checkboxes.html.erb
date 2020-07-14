@@ -1,5 +1,5 @@
 <% if @product.subscribable? %>
-  <br><br>
+  <br><hr><br>
   <div id="cart_checkboxes" class="form-group">
     <%= radio_button_tag :cart, ".add-to-cart", true, class: "cart_radio_button" %>
     <%= label_tag "cart_.add-to-cart".to_s, Spree.t(:one_time_order), id: "cart_.add-to-cart" %>
@@ -8,5 +8,4 @@
     <%= radio_button_tag :cart, ".subscription_options", false, class: "cart_radio_button" %>
     <%= label_tag "cart_.subscription_options".to_s, Spree.t(:subscription_order) %>
   </div>
-  <hr>
 <% end %>

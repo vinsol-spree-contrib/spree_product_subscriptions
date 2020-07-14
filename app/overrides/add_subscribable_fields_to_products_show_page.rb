@@ -8,6 +8,6 @@ Deface::Override.new(
 Deface::Override.new(
   virtual_path: "spree/products/_cart_form",
   name: "add_subscribable_fields_to_products_show",
-  insert_before: "#inside-product-cart-form div:nth-of-type(3)",
+  insert_after: "erb[loud]:contains('hidden_field_tag')",
   partial: "spree/products/subscription_fields"
 )
