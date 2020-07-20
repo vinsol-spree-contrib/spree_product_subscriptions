@@ -28,6 +28,7 @@ module Spree
     has_many :complete_orders, -> { complete }, through: :orders_subscriptions, source: :order
 
     self.whitelisted_ransackable_associations = %w( parent_order )
+    self.inheritance_column = :sub_type
 
     scope :paused, -> { where(paused: true) }
     scope :unpaused, -> { where(paused: false) }
@@ -97,10 +98,18 @@ module Spree
       cancelled?
     end
 
+    def type_of_sub
+      if sub_type == 'Spree::Subscriptions::LabelStatus'
+        'label_status'
+      elsif sub_type == 'Spree::Subscriptions::Period'
+        'frequency'
+      end
+    end
+
     private
 
       def set_type
-        self.type = subscription_frequency_id ? 'Spree::Subscriptions::Period' : 'Spree::Subscriptions::LabelStatus'
+        self.sub_type = subscription_frequency_id ? 'Spree::Subscriptions::Period' : 'Spree::Subscriptions::LabelStatus'
       end
 
       def update_price

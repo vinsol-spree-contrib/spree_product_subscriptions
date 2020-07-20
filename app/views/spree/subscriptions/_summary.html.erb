@@ -1,7 +1,4 @@
 <div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title"><%= Spree.t(:subscription_summary) %></h3>
-  </div>
 
   <table class="table table-condensed table-bordered" id="subscription_tab_summary" data-hook>
     <tbody class="additional-info">
@@ -45,8 +42,8 @@
           </td>
         </tr>
       <% else %>
-        <td><strong><%= Spree.t(:when_label_status) %>:</strong></td>
-        <td><span><%= @subscription.label_status.label_status %></span></td>
+        <td><strong><%= Spree.t('subscriptions.header_of_type') %>:</strong></td>
+        <td><span><%= @subscription.label_status.title %></span></td>
       <% end %>
       <% if @subscription.cancelled? %>
         <tr id="cancellation_fields">
