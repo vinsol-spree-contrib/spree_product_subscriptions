@@ -14,7 +14,15 @@ module Spree::ProductDecorator
 
     base.whitelisted_ransackable_attributes += %w( is_subscribable )
 
-    base.validates :subscription_label_statuses, presence: true, if: :subscribable?
+    base.validate :subscribable_options, if: :subscribable?
+  end
+
+  private
+
+  def subscribable_options
+    unless subscription_label_statuses.present? || subscription_frequencies.present?
+      errors.add(:subscribable, 'please select a subscription frequency')
+    end
   end
 end
 
