@@ -58,6 +58,9 @@ AjaxHandler.prototype.sendRequest = function($target, data) {
     url: data.url,
     dataType: "JSON",
     method: data.method,
+    headers: {
+      'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+    },
     success: function(response) {
       if (response.method == "CANCEL") {
         _this.handleCancelSuccess($target, response);

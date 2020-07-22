@@ -61,8 +61,7 @@ module Spree
 
         def collection
           @search = super.active.ransack(params[:q])
-          @collection = @search.result.includes(:frequency, :complete_orders, variant: :product)
-                                      .references(:complete_orders)
+          @collection = @search.result.includes(:frequency, :label_status, variant: :product)
                                       .order(created_at: :desc)
                                       .page(params[:page])
         end
