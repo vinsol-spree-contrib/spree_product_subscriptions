@@ -1,11 +1,13 @@
-Spree::LineItem.class_eval do
+module SpreeProductSubscriptions::LineItemDecorator
 
-  attr_accessor :subscription_frequency_id, :delivery_number, :subscribe
 
-  after_create :create_subscription!, if: :subscribable?
-  after_update :update_subscription_quantity, if: :can_update_subscription_quantity?
-  after_update :update_subscription_attributes, if: :can_update_subscription_attributes?
-  after_destroy :destroy_associated_subscription!, if: :subscription?
+  def self.prepended(base)
+    base.after_create :create_subscription!, if: :subscribable?
+    base.after_update :update_subscription_quantity, if: :can_update_subscription_quantity?
+    base.after_update :update_subscription_attributes, if: :can_update_subscription_attributes?
+    base.after_destroy :destroy_associated_subscription!, if: :subscription?
+    base.attr_accessor :subscription_frequency_id, :delivery_number, :subscribe
+  end
 
   def subscription_attributes_present?
     subscription_frequency_id.present? || delivery_number.present?
@@ -67,3 +69,5 @@ Spree::LineItem.class_eval do
     end
 
 end
+
+Spree::LineItem.prepend SpreeProductSubscriptions::LineItemDecorator

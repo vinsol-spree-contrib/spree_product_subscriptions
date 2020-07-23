@@ -1,4 +1,4 @@
-Spree::Admin::PaymentsController.class_eval do
+module SpreeProductSubscriptions::PaymentsControllerDecorator
 
   private
 
@@ -13,3 +13,5 @@ Spree::Admin::PaymentsController.class_eval do
     end
 
 end
+
+Spree::Admin::PaymentsController.prepend SpreeProductSubscriptions::PaymentsControllerDecorator
