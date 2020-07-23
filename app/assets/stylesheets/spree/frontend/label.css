@@ -1,0 +1,44 @@
+.pos-rel {
+  position: relative;
+}
+
+.top-left-label {
+  display: block;
+  width: 80px;
+  background-color: red;
+  color: white;
+  height: 20px;
+  line-height: 20px;
+  font-size: 11px;
+  text-align: center;
+  position: absolute;
+  left: -5px;
+  top: 25px;
+  -ms-transform: rotate(-45deg); /* IE 9 */
+  -webkit-transform: rotate(-45deg); /* Safari 3-8 */
+  transform: rotate(-45deg);
+}
+.top-left-label:before {
+  display: block;
+  content: "";
+  display: block;
+  width: 20px;
+  height: 20px;
+  border: solid 10px transparent;
+  border-color: transparent red red transparent;
+  position: absolute;
+  left: -20px;
+  top: 0;
+}
+.top-left-label:after {
+  display: block;
+  content: "";
+  display: block;
+  width: 20px;
+  height: 20px;
+  border: solid 10px transparent;
+  border-color: transparent transparent red red;
+  position: absolute;
+  right: -20px;
+  top: 0;
+}

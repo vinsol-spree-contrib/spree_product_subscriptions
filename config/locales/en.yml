@@ -3,6 +3,7 @@
 
 en:
   hello: "Hello world"
+  subscribable: Subscribable
 
   spree:
     subscription_notifier:
