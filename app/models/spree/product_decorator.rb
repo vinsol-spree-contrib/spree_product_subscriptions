@@ -14,7 +14,7 @@ module Spree::ProductDecorator
 
     base.whitelisted_ransackable_attributes += %w( is_subscribable )
 
-    base.validate :subscribable_options, if: :subscribable?
+    base.validate :subscribable_options, on: :update, if: :subscribable?
   end
 
   private
