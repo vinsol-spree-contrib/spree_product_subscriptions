@@ -13,6 +13,10 @@ module Spree::OrderDecorator
 
   def available_payment_methods
     @available_payment_methods ||= Spree::PaymentMethod.active.available_on_front_end
+
+    return @available_payment_methods if sap_customer_id
+
+    @available_payment_methods.reject { |m| m.type == 'Spree::PaymentMethod::PurchaseOrder' }
   end
 
   private
