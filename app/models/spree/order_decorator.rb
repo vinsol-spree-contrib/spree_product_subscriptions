@@ -18,9 +18,14 @@ module Spree::OrderDecorator
   private
 
   def enable_subscriptions
+    payment_source = if payments.any?
+                       payments.first.source
+                     else
+                       merge_order.payments.last.source
+                     end
     subscriptions.each do |subscription|
       subscription.update(
-        source: payments.from_credit_card.first.source,
+        source: payment_source,
         enabled: true,
         ship_address: ship_address.clone,
         bill_address: bill_address.clone
