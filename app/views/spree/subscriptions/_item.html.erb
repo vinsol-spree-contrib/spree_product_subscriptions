@@ -1,9 +1,9 @@
 <div>
   <div class="panel panel-default">
     <div class="panel-heading">
-      <h1 class="panel-title">
+      <h3 class="panel-title shopping-title">
         <%= Spree.t(:subscription_item) %>
-      </h1>
+      </h3>
     </div>
     <table class="table table-bordered line-items" data-hook="line-items">
       <thead>
@@ -19,13 +19,17 @@
           <td class="line-item-image image text-center">
             <%= mini_image(@subscription.variant) %>
           </td>
-          <td class="line-item-name text-center">
-            <%= @subscription.variant.name + ' : ' +
-              @subscription.variant.option_values.find_by(
-                option_type_id: Spree::OptionType.find_by(name: 'size').id
-              ).presentation %>
+          <td class="line-item-name text-left">
+            <%= @subscription.variant.name %>
+            <br>
+            <% options_text = @subscription.variant.front_end_options_text %>
+            <% if options_text.present? %>
+              <small class="font-weight-bold">
+                <%= "(#{options_text})" %>
+              </small>
+            <% end %>
           </td>
-          <td class="line-item-price text-right">
+          <td class="line-item-price text-center">
             <div data-hook="admin_subscription_price_form" data-subscription-id="<%= @subscription.id %>">
               <%= number_to_currency(@subscription.variant.cost_price) || number_to_currency(@subscription.price) %>
             </div>

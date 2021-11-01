@@ -1,7 +1,7 @@
 module Spree
   class Subscription < Spree::Base
 
-    attr_accessor :cancelled
+    attr_accessor :cancelled, :new_source_attributes
 
     include Spree::Core::NumberGenerator.new(prefix: 'S')
 
@@ -65,6 +65,7 @@ module Spree
     before_validation :update_price, on: :update, if: :variant_id_changed?
     after_update :notify_user, if: :user_notifiable?
     after_update :notify_cancellation, if: :cancellation_notifiable?
+    before_validation :set_new_source, if: -> { new_source_attributes }
 
     def cancel_with_reason(attributes)
       self.cancelled = true
@@ -107,6 +108,51 @@ module Spree
     end
 
     private
+
+      def normalized_new_source_attributes
+        source_attributes = new_source_attributes[:source_attributes]
+        last_source = self.source
+
+        result = {}
+        result[:payment_method_id] = new_source_attributes[:payment_attributes][:payments_attributes].first[:payment_method_id]
+        result[:name] = source_attributes[:name]
+        result[:verification_value] = source_attributes[:verification_value]
+        result[:cc_type] = source_attributes[:cc_type]
+        result[:number] = source_attributes[:number]
+        result[:expiry] = source_attributes[:expiry]
+        result[:user_id] = last_source.user_id
+        result[:default] = true
+        result[:address] = set_address
+        result
+      end
+
+      def set_address
+        address_attributes = new_source_attributes[:billing_address_attributes]
+        if(bill_address_id = address_attributes[:bill_address_id]) != '0' #(bill_address_id = address_attributes[:bill_address_id]).present?
+          Spree::Address.find(bill_address_id)
+        else
+          Spree::Address.find_or_initialize_by(address_attributes[:bill_address_attributes].except(:id))
+        end
+      end
+
+      def set_new_source
+        self.source = if new_source_attributes[:existing_card]
+                        credit_card_id = new_source_attributes[:payment_attributes][:existing_card]
+                        Spree::CreditCard.find(credit_card_id).validate!
+                      else
+                        new_source = Spree::CreditCard.new(normalized_new_source_attributes)
+                        new_source.set_last_digits
+                        self.source = new_source.create_with_validation!
+                        self.bill_address = self.source.address
+                      end
+        self.new_source_attributes = nil
+      rescue Spree::Gateway::AuthorizeNetCimCreditCardValidationError => error
+        self.errors.add(:credit_card_invalid, error.message)
+      rescue Spree::Gateway::AuthorizeNetCimCreditCardCreationError => error
+        self.errors.add(:credit_card_creation_error, error.message)
+      rescue => error
+        self.errors.add(:credit_card_setting_error, 'Credit Card setting failure!')
+      end
 
       def set_type
         self.sub_type = subscription_frequency_id ? 'Spree::Subscriptions::Period' : 'Spree::Subscriptions::LabelStatus'
