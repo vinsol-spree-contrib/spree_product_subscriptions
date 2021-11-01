@@ -1,9 +1,9 @@
 <tr data-id=<%= subscription.id %>>
   <td class="subscription-number"><%= link_to subscription.number, edit_subscription_path(subscription) %></td>
   <td class="subscription-product-name"><%= subscription.variant.product.name %></td>
-  <td class="text-right subscription-price"><%= number_to_currency(subscription.price * subscription.quantity) %></td>
-  <td class="text-center subscription-started"><%= subscription.parent_order.completed_at.to_date.to_formatted_s(:rfc822) %></td>
-  <td class="text-center">
+  <td class="subscription-price"><%= number_to_currency(subscription.price * subscription.quantity) %></td>
+  <td class="subscription-started"><%= subscription.parent_order.completed_at.to_date.to_formatted_s(:rfc822) %></td>
+  <td class="subscription-frequency">
     <% if subscription.frequency %>
       <%= subscription.frequency.title.titleize %>
     <% else %>
@@ -13,7 +13,7 @@
   <td class="subscription-action-links">
     <% @subscription = subscription %>
     <% if subscription.cancelled? %>
-        Subscription Cancelled
+        <%= Spree.t(:subscription_cancelled) %>
     <% else %>
       <%= link_to Spree.t(:edit), edit_subscription_path(subscription), class: "btn tc-btn tc-btn-green" %>
     <% end %>

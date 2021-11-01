@@ -1,0 +1,32 @@
+<script>
+  window.addEventListener('load', () => {
+    if (document.querySelector('.checkout-address-form')) {
+      document.querySelector('#use_existing_card_yes').addEventListener('change', e => {
+        document.querySelector('.checkout-address-form').style.display = 'none'
+      })
+      document.querySelector('#use_existing_card_no').addEventListener('change', e =>   {
+        document.querySelector('.checkout-address-form').style.display = 'block'
+      })
+    }
+  })
+</script>
+
+<%= render partial: 'spree/admin/shared/error_messages', locals: { target: @subscription } %>
+<div class="h3 col-sm-6 shopping-title"><%= Spree.t(:credit_card_modification) %> </div>
+<div class="checkout-full-column" data-hook="checkout_form_wrapper">
+  <div id="checkout_form_payment" >
+    <%= form_for @subscription, url: update_payment_details_subscription_path(@subscription) do |f| %>
+      <%= render partial: 'spree/shared/payment_sources', locals: { form: f } %>
+        <div class="card text-right form-buttons mt-1 mb-2 my-md-4" data-hook="buttons">
+          <div class="d-flex flex-column align-items-center">
+            <%= submit_tag Spree.t(:new_credit_card_save), class: 'btn tc-btn tc-btn-green mb-md-1' %>
+            <%= link_to 'back to my subscription', edit_subscription_path(@subscription), class: "mt-3" %>
+          </div>
+       </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+  document.querySelector('.checkout-address-form').style.display = 'none'
+</script>
