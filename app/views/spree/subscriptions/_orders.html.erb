@@ -1,5 +1,4 @@
-<h3>Orders</h3>
-<hr>
+<h3 class="shopping-title">Orders</h3>
 <div id="subscription_orders">
   <% if @subscription.orders.present? %>
     <table class="table" id="listing_orders" data-hook>
@@ -21,7 +20,7 @@
           <td class="order-status"><%= Spree.t("order_state.#{order.state}").titleize %></td>
           <td class="order-payment-state"><%= Spree.t("payment_states.#{order.payment_state}").titleize if order.payment_state %></td>
           <td class="order-shipment-state"><%= Spree.t("shipment_states.#{order.shipment_state}").titleize if order.shipment_state %></td>
-          <td class="lead text-primary order-total"><%= order.display_total %></td>
+          <td class="lead order-total"><%= order.display_total %></td>
         </tr>
       <% end %>
       </tbody>

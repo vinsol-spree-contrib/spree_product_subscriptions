@@ -1,5 +1,9 @@
 <fieldset data-hook="credit_card">
-  <legend><%= Spree.t(:credit_card) %></legend>
+  <h3 class="shopping-title">
+    <%= Spree.t(:credit_card) %>
+    <%= link_to Spree.t(:credit_card_modification), edit_payment_details_subscription_path(@subscription), class: "mt-3", style: "font-size: small" %>
+  </h3>
+
   <table class="table table-condensed table-bordered">
     <tr>
       <th width="20%"><%= Spree.t(:name_on_card) %>:</th>

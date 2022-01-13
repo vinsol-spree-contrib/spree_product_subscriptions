@@ -18,6 +18,8 @@ Spree::Core::Engine.routes.draw do
       patch :pause
       patch :unpause
       patch :cancel
+      get   :edit_payment_details
+      patch :update_payment_details
     end
   end
 end
