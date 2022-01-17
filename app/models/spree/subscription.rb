@@ -148,12 +148,12 @@ module Spree
           self.bill_address = self.source.address
         end
         self.new_source_attributes = nil
-      rescue TcShop::Spree::Gateway::AuthorizeNetCimDecorator::CreationError => error
-        self.errors.add(:credit_card_invalid, error.message)
-      rescue TcShop::Spree::Gateway::AuthorizeNetCimDecorator::ValidationError => error
-        self.errors.add(:credit_card_creation_error, error.message)
-      rescue => error
-        self.errors.add('Credit Card setting failure!')
+      rescue TcShop::Spree::Gateway::AuthorizeNetCimDecorator::CreationError => e
+        self.errors.add(:credit_card, e.message)
+      rescue TcShop::Spree::Gateway::AuthorizeNetCimDecorator::ValidationError => e
+        self.errors.add(:credit_card, e.message)
+      rescue => e
+        self.errors.add(:credit_card, 'Failed to create new payment method')
       end
 
       def set_type

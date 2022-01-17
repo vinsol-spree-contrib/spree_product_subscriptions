@@ -103,22 +103,37 @@ module Spree
     end
 
     def billing_address_attributes
-      params.require(:subscriptions_label_status).permit(:bill_address_id, bill_address_attributes: [:firstname, :lastname, :company, :address1, :address2, :city, :state_id, :state_name, :zipcode, :country_id, :phone, :id])
+      params.require(:subscriptions_label_status).permit(
+        :bill_address_id,
+        bill_address_attributes: [
+          :firstname, :lastname, :company, :address1, :address2, :city,
+          :state_id, :state_name, :zipcode, :country_id, :phone, :id
+        ]
+      )
     end
 
     def subscription_attributes
-      params.require(:subscription).permit(:quantity, :next_occurrence_at,
-                                           :subscription_frequency_id, :subscription_label_status_id, :variant_id, :prior_notification_days_gap,
-                                           ship_address_attributes: [:firstname, :lastname, :address1, :address2, :city, :zipcode, :country_id, :state_id, :phone],
-                                           bill_address_attributes: [:firstname, :lastname, :address1, :address2, :city, :zipcode, :country_id, :state_id, :phone])
+      params.require(:subscription).permit(
+        :quantity, :next_occurrence_at, :subscription_frequency_id,
+        :subscription_label_status_id, :variant_id, :prior_notification_days_gap,
+        ship_address_attributes: [
+          :firstname, :lastname, :address1, :address2, :city, :zipcode, :country_id, :state_id, :phone
+        ],
+        bill_address_attributes: [
+          :firstname, :lastname, :address1, :address2, :city, :zipcode, :country_id, :state_id, :phone
+        ]
+      )
     end
 
     def new_source_attributes
       {
-        new_source_attributes: { existing_card: existing_card_attribute,
-                                 payment_attributes: payment_attributes,
-                                 source_attributes: payment_source_attributes,
-                                 billing_address_attributes: billing_address_attributes, } }
+        new_source_attributes: {
+          existing_card: existing_card_attribute,
+          payment_attributes: payment_attributes,
+          source_attributes: payment_source_attributes,
+          billing_address_attributes: billing_address_attributes
+        }
+      }
     end
 
     def existing_card_attribute
