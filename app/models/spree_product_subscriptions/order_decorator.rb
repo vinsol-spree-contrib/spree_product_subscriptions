@@ -12,14 +12,6 @@ module SpreeProductSubscriptions
       base.state_machine.after_transition to: :complete, do: :enable_subscriptions, if: :any_disabled_subscription?
     end
 
-    def available_payment_methods
-      @available_payment_methods ||= ::Spree::PaymentMethod.active.available_on_front_end
-
-      return @available_payment_methods if sap_customer_id.present?
-
-      @available_payment_methods.reject { |m| m.type == 'Spree::PaymentMethod::PurchaseOrder' }
-    end
-
     private
 
     def enable_subscriptions
