@@ -5,8 +5,8 @@ namespace :subscription do
     #   batches.map{ |subscription| subscription.process }
     # end
 
-    # Spree::Subscriptions::Period.eligible_for_subscription.find_in_batches do |batches|
-    #   batches.map(&:process)
-    # end
+    Spree::Subscriptions::Period.eligible_for_subscription.find_in_batches do |batches|
+      batches.map(&:process)
+    end
   end
 end
