@@ -92,8 +92,6 @@ AjaxHandler.prototype.handlePatchSuccess = function($target, response) {
     $(".subscription_next_occurrence_at").val(response.next_occurrence_at);
     $(".subscription_next_occurrence_at").removeAttr("disabled");
   }
-  $target.toggleClass("btn-success");
-  $target.toggleClass("btn-warning");
   $("#success_flash_message").html(response.flash).removeClass("d-none");
   var $symbol = $target.find(".icon");
   $symbol.toggleClass("icon-pause").toggleClass("icon-play");

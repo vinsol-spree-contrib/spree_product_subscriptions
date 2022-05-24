@@ -107,6 +107,10 @@ module Spree
       end
     end
 
+    def title
+      (frequency || label_status).title || 'No Subscription Title'
+    end
+
     private
 
       def normalized_new_source_attributes
