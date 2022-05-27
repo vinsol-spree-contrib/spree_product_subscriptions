@@ -208,7 +208,7 @@ module Spree
         Spree::Dependencies.cart_add_item_service.constantize.call(
           order: order,
           variant: variant,
-          quantity: 1
+          quantity: variant.quantity
         )
         order.next
       end
